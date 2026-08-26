@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Suppliers - MarketSmart')
+@section('page_title', 'Suppliers')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Suppliers</h4>
@@ -51,11 +51,11 @@
                                 <td>{{ $supplier['name'] }}</td>
                                 <td>{{ $supplier['phone'] }}</td>
                                 <td>{{ $supplier['email'] }}</td>
-                                <td>
+                                <td class="text-nowrap">
                                     <a href="{{ route('manager.suppliers.edit', $supplier['id']) }}"
                                        class="btn btn-sm btn-outline-primary me-1"
                                        title="Modifier">
-                                        <i class="bi bi-pencil"></i>
+                                        ✏️
                                     </a>
                                     <form action="{{ route('manager.suppliers.destroy', $supplier['id']) }}"
                                           method="POST"
@@ -66,7 +66,7 @@
                                         <button type="submit"
                                                 class="btn btn-sm btn-outline-danger"
                                                 title="Supprimer">
-                                            <i class="bi bi-trash"></i>
+                                            🗑️
                                         </button>
                                     </form>
                                 </td>

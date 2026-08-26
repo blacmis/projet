@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Expired Products - MarketSmart')
+@section('page_title', 'Expired Products')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Expired Products</h4>
@@ -51,7 +51,6 @@
                             <th>Batch No</th>
                             <th>Expiry Date</th>
                             <th>Quantity</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,11 +61,6 @@
                                 <td>{{ $item['batch_no'] }}</td>
                                 <td class="text-danger">{{ $item['expiry_date'] }}</td>
                                 <td>{{ $item['quantity'] }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                </td>
                             </tr>
                         @empty
                             <tr>

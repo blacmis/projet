@@ -1,5 +1,16 @@
 <?php
-
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\InventoryManagerController;
+use App\Http\Controllers\Admin\CashierOverviewController;
+use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\SaleReportController;
+use App\Http\Controllers\Admin\InventoryReportController;
+use App\Http\Controllers\Admin\StockReportController;
+use App\Http\Controllers\Admin\ExpiryReportController;
+use App\Http\Controllers\Admin\RevenueReportController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\SearchController as AdminSearchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\ProductController;
@@ -12,104 +23,150 @@ use App\Http\Controllers\Manager\CategoryController;
 use App\Http\Controllers\Manager\UnitController;
 use App\Http\Controllers\Manager\ReportController;
 use App\Http\Controllers\Manager\ProfileController;
-use App\Http\Controllers\CashierController;
+use App\Http\Controllers\Cashier\PaymentController;
+use App\Http\Controllers\Cashier\ReceiptController;
+use App\Http\Controllers\Cashier\SalesHistoryController;
+use App\Http\Controllers\Cashier\DailySummaryController;
+use App\Http\Controllers\Cashier\ProfileController as CashierProfileController;
+use App\Http\Controllers\Cashier\NotificationController as CashierNotificationController;
+use App\Http\Controllers\Cashier\QuickShopController;
+use App\Http\Controllers\Auth\AuthController;
 
 
-Route::get('/',function(){
+// ROUTES PUBLIQUES
+// =========================================
+Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function () {
-    return view('marketsmart.login');
-});
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
 
-Route::get('/forgotpassword', function () {
-    return view('marketsmart.forgotpassword');
+Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendOtp'])->middleware('throttle:3,1')->name('password.email');
+
+Route::get('/verify-otp', [AuthController::class, 'showOtp'])->name('password.otp');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:5,1')->name('password.otp.verify');
+
+Route::get('/reset-password', [AuthController::class, 'showReset'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:5,1')->name('password.update');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/reset', function () {
+    return view('marketsmart.resetting');
 });
-Route::prefix('manager')->name('manager.')->group(function(){
-    //route du dashboard
-    Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard') ;
-    //nouvelle route produits
-    Route::get('/products',[ProductController::class, 'index'])->name('products.index');
-    //affiche le formulaire d'ajout d'un produit
-    Route::get('/products/create',[ProductController::class, 'create'])->name('products.create');
-    //enregistre le nouveau produit traitement du formulaire
-    Route::post('/products',[ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{id}/edit',[ProductController::class,'edit'])->name('products.edit');
-    Route::put('/products/{id}',[ProductController::class,'update'])->name('products.update');
-    Route::delete('/products/{id}',[ProductController::class,'destroy'])->name('products.destroy');
-    //nouvelle route de stockinflow
+// ROUTES MANAGER
+Route::prefix('manager')
+    ->name('manager.')
+    ->middleware('role:manager')
+    ->group(function () {
+        // toutes tes routes manager
+        // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Products
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    // Stock Inflow
     Route::get('/stock-inflow', [StockInflowController::class, 'index'])->name('stock-inflow.index');
     Route::get('/stock-inflow/create', [StockInflowController::class, 'create'])->name('stock-inflow.create');
     Route::post('/stock-inflow', [StockInflowController::class, 'store'])->name('stock-inflow.store');
-    //nouvelle route de stockoutflew
+    // Stock Outflow
     Route::get('/stock-outflow', [StockOutflowController::class, 'index'])->name('stock-outflow.index');
     Route::get('/stock-outflow/create', [StockOutflowController::class, 'create'])->name('stock-outflow.create');
     Route::post('/stock-outflow', [StockOutflowController::class, 'store'])->name('stock-outflow.store');
-    //nouvelle route de stockadjustment
+    // Stock Adjustment
     Route::get('/stock-adjustment', [StockAdjustmentController::class, 'index'])->name('stock-adjustment.index');
     Route::get('/stock-adjustment/create', [StockAdjustmentController::class, 'create'])->name('stock-adjustment.create');
     Route::post('/stock-adjustment', [StockAdjustmentController::class, 'store'])->name('stock-adjustment.store');
-    //nouvelle route de expired
-    Route::get('/expired',[ExpiredController::class,'index'])->name('expired.index');
-    Route::get('/expiring-soon',[ExpiredController::class,'expiringSoon'])->name('expiring.soon');
-    //nouvelle route pour supplier
+    // Expired
+    Route::get('/expired', [ExpiredController::class, 'index'])->name('expired.index');
+    Route::get('/expiring-soon', [ExpiredController::class, 'expiringSoon'])->name('expiring.soon');
+    // Suppliers
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
     Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
     Route::get('/suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::put('/suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
     Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
-    //nouvelle route pour le champs categories
+    // Categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-    //nouvelle route pour les champs units
+    // Units
     Route::get('/units', [UnitController::class, 'index'])->name('units.index');
     Route::get('/units/create', [UnitController::class, 'create'])->name('units.create');
     Route::post('/units', [UnitController::class, 'store'])->name('units.store');
     Route::get('/units/{id}/edit', [UnitController::class, 'edit'])->name('units.edit');
     Route::put('/units/{id}', [UnitController::class, 'update'])->name('units.update');
     Route::delete('/units/{id}', [UnitController::class, 'destroy'])->name('units.destroy');
-    //nouvelles routes pour les inventaire et le reports
-    Route::get('/reports/inventory',[ReportController::class,'inventory'])->name('reports.inventory');
-    Route::get('/reports/low-stock',[ReportController::class,'lowStock'])->name('reports.low-stock');
-    //nouvelle route pour le profile
-    Route::get('/profile',[ProfileController::class,'index'])->name('profile');
-  
+    // Reports
+    Route::get('/reports/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
+    Route::get('/reports/low-stock', [ReportController::class, 'lowStock'])->name('reports.low-stock');
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    });
 
-Route::prefix('cashier')->name('cashier.')->group(function () {
-    Route::get('/payment', [CashierController::class, 'payment'])->name('payment');
-    Route::post('/cart/add', [CashierController::class, 'addToCart'])->name('cart.add');
-    Route::post('/cart/update', [CashierController::class, 'updateCart'])->name('cart.update');
-    Route::post('/cart/remove', [CashierController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/cart/clear', [CashierController::class, 'clearCart'])->name('cart.clear');
+// ROUTES CASHIER
+Route::prefix('cashier')
+    ->name('cashier.')
+    ->middleware('role:cashier')
+    ->group(function () {
+        // toutes tes routes cashier
+        Route::get('/quick-shop', [QuickShopController::class, 'quickShop'])->name('quick-shop');
 
-    Route::post('/checkout', [CashierController::class, 'checkout'])->name('checkout');
-    Route::get('/payment-confirmation/{sale}', [CashierController::class, 'confirmation'])->name('confirmation');
+    Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
+    Route::post('/cart/add', [PaymentController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/update', [PaymentController::class, 'updateCart'])->name('cart.update');
+    Route::post('/cart/remove', [PaymentController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/clear', [PaymentController::class, 'clearCart'])->name('cart.clear');
+    Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+    Route::get('/confirmation/{sale?}', [PaymentController::class, 'confirmation'])->name('confirmation');
 
-    Route::get('/sales-history', [CashierController::class, 'salesHistory'])->name('sales');
-    Route::get('/sales/{sale}', [CashierController::class, 'showSale'])->name('sale.show');
+    Route::get('/receipt/{sale?}', [ReceiptController::class, 'receipt'])->name('receipt');
 
-    Route::get('/receipt/{sale?}', [CashierController::class, 'receipt'])->name('receipt');
+    // Sales History → cashier.sales + cashier.sale.show
+    Route::get('/sales-history', [SalesHistoryController::class, 'salesHistory'])->name('sales');
+    Route::get('/sales/{sale}', [SalesHistoryController::class, 'showSale'])->name('sale.show');
 
-    Route::get('/daily-summary', [CashierController::class, 'dailySummary'])->name('summary');
-    Route::get('/profile', [CashierController::class, 'profile'])->name('profile');
-    Route::put('/profile', [CashierController::class, 'updateProfile'])->name('profile.update');
+    // Daily Summary → cashier.summary  ← C’EST ÇA QUI MANQUAIT
+    Route::get('/daily-summary', [DailySummaryController::class, 'dailySummary'])->name('summary');
 
-    Route::get('/notifications', [CashierController::class, 'notifications'])->name('notifications');
-    Route::post('/notifications/{notification}/read', [CashierController::class, 'markNotificationRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', [CashierController::class, 'markAllNotificationsRead'])->name('notifications.read-all');
+    Route::get('/profile', [CashierProfileController::class, 'profile'])->name('profile');
+    Route::put('/profile', [CashierProfileController::class, 'updateProfile'])->name('profile.update');
 
-    Route::get('/quick-shop', [CashierController::class, 'quickShop'])->name('quick-shop');
-});
+    Route::get('/notifications', [CashierNotificationController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/{notification}/read', [CashierNotificationController::class, 'markNotificationRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [CashierNotificationController::class, 'markAllNotificationsRead'])->name('notifications.read-all');
+    });
 
+Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/inventory-manager', [InventoryManagerController::class, 'index'])->name('inventory-manager');
+    Route::get('/cashier', [CashierOverviewController::class, 'index'])->name('cashier');
+    Route::get('/activities', [ActivityController::class, 'index'])->name('activities');
+    Route::get('/sale-report', [SaleReportController::class, 'index'])->name('sale-report');
+    Route::get('/inventory-report', [InventoryReportController::class, 'index'])->name('inventory-report');
+    Route::get('/stock-report', [StockReportController::class, 'index'])->name('stock-report');
+    Route::get('/expiry-report', [ExpiryReportController::class, 'index'])->name('expiry-report');
+    Route::get('/revenue-report', [RevenueReportController::class, 'index'])->name('revenue-report');
 
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/read-all', [AdminNotificationController::class, 'markAllRead'])->name('notifications.read-all');
 
+    Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
 
-Route::get('/reset', function () {
-    return view('marketsmart.resetting');
-});
+    Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
+    });
+//acceptation des route par le midleware
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('role:admin,manager,cashier')
+    ->name('logout');

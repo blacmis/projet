@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Units - MarketSmart')
+@section('page_title', 'Units')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Units</h4>
@@ -53,23 +53,15 @@
                                     <span class="badge bg-light text-dark">{{ $unit['short_code'] }}</span>
                                 </td>
                                 <td>{{ $unit['description'] }}</td>
-                                <td>
+                                <td class="text-nowrap">
                                     <a href="{{ route('manager.units.edit', $unit['id']) }}"
-                                       class="btn btn-sm btn-outline-primary me-1"
-                                       title="Modifier">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    class="btn btn-sm btn-outline-primary me-1" title="Modifier">✏️</a>
                                     <form action="{{ route('manager.units.destroy', $unit['id']) }}"
-                                          method="POST"
-                                          class="d-inline"
-                                          onsubmit="return confirm('Voulez-vous vraiment supprimer cette unité ?')">
+                                        method="POST" class="d-inline"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer cette unité ?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                                class="btn btn-sm btn-outline-danger"
-                                                title="Supprimer">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">🗑️</button>
                                     </form>
                                 </td>
                             </tr>

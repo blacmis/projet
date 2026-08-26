@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Stock Inflow - MarketSmart')
+@section('page_title', 'Stock Inflow')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Stock Inflow</h4>

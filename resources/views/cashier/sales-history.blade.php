@@ -36,7 +36,7 @@
                     <td><strong>{{ number_format($sale->total, 0) }} FCFA</strong></td>
                     <td><span class="badge {{ $sale->status === 'completed' ? 'badge-green' : 'badge-red' }}">{{ ucfirst($sale->status) }}</span></td>
                     <td>
-                        <a class="btn btn-light" href="{{ route('cashier.sale.show', $sale) }}">View <a class="btn btn-light" href="{{ route('cashier.receipt', $sale) }}"></a>
+                        <a class="btn btn-light" href="{{ route('cashier.sale.show', $sale->id) }}">View</a>
                     </td>
                 </tr>
             @empty
@@ -46,6 +46,6 @@
         </table>
     </div>
 
-    <div class="pagination">{{ $sales->links() }}</div>
+    
 </div>
 @endsection

@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Categories - MarketSmart')
+@section('page_title', 'Categories')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Categories</h4>
@@ -52,11 +52,11 @@
                                     {{ $category['name'] }}
                                 </td>
                                 <td>{{ $category['description'] }}</td>
-                                <td>
+                                <td class="text-nowrap">
                                     <a href="{{ route('manager.categories.edit', $category['id']) }}"
                                        class="btn btn-sm btn-outline-primary me-1"
                                        title="Modifier">
-                                        <i class="bi bi-pencil"></i>
+                                        ✏️
                                     </a>
                                     <form action="{{ route('manager.categories.destroy', $category['id']) }}"
                                           method="POST"
@@ -67,7 +67,7 @@
                                         <button type="submit"
                                                 class="btn btn-sm btn-outline-danger"
                                                 title="Supprimer">
-                                            <i class="bi bi-trash"></i>
+                                            🗑️
                                         </button>
                                     </form>
                                 </td>

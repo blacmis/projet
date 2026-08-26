@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-orange">
-                   <i class="bi bi-check-lg"></i>  Enregistrer le produit</button>
+                   <i class="bi bi-check-lg"></i> + Enregistrer le produit</button>
                 <a href="{{ route('manager.products.index') }}" class="btn btn-secondary">Annuler</a>
             </form>
         </div>
