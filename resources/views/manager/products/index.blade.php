@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Products - MarketSmart')
+@section('page_title', 'Products')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Products</h4>
@@ -64,24 +64,20 @@
                                         <span class="badge bg-warning text-dark">Low Stock</span>
                                     @endif
                                 </td>
-                                <td>
-                                    {{-- Bouton Édition --}}
+                                <td class="text-nowrap">
                                     <a href="{{ route('manager.products.edit', $product['id']) }}"
-                                       class="btn btn-sm btn-outline-primary me-1"
-                                       title="Modifier">
-                                        <i class="bi bi-pencil"></i>
+                                    class="btn btn-sm btn-outline-primary me-1"
+                                    title="Edit">
+                                        ✏️
                                     </a>
-                                    {{-- Bouton Suppression --}}
                                     <form action="{{ route('manager.products.destroy', $product['id']) }}"
-                                          method="POST"
-                                          class="d-inline"
-                                          onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?')">
+                                        method="POST"
+                                        class="d-inline"
+                                        onsubmit="return confirm('Supprimer cet élément ?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                                class="btn btn-sm btn-outline-danger"
-                                                title="Supprimer">
-                                            <i class="bi bi-trash"></i>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            🗑️
                                         </button>
                                     </form>
                                 </td>

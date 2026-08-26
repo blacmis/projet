@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'Inventory Report - MarketSmart')
+@section('page_title', 'Inventory Report')
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Inventory Report</h4>

@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->restrictOnDelete();
-            $table->string('product_name');
+            $table->string('product_name')->nullable();
             $table->unsignedInteger('quantity');
             $table->decimal('unit_price', 12, 2);
             $table->decimal('line_total', 12, 2);

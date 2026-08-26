@@ -23,7 +23,7 @@
         <div class="col-md-3">
             <div class="stat-card d-flex align-items-center gap-3">
                 <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                    <i class="bi bi-exclamation-triangle"></i>
+                  🛒 <i class="bi bi-exclamation-triangle"></i>
                 </div>
                 <div>
                     <h3 class="mb-0 fw-bold">28</h3>
@@ -35,7 +35,7 @@
         <div class="col-md-3">
             <div class="stat-card d-flex align-items-center gap-3">
                 <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                    <i class="bi bi-clock-history"></i>
+                   ⚠️ <i class="bi bi-clock-history"></i>
                 </div>
                 <div>
                     <h3 class="mb-0 fw-bold">15</h3>
@@ -47,7 +47,7 @@
         <div class="col-md-3">
             <div class="stat-card d-flex align-items-center gap-3">
                 <div class="stat-icon bg-danger bg-opacity-10 text-danger">
-                    <i class="bi bi-trash"></i>
+                   🚨 <i class="bi bi-trash"></i>
                 </div>
                 <div>
                     <h3 class="mb-0 fw-bold">7</h3>
@@ -59,7 +59,7 @@
         <div class="col-md-3">
             <div class="stat-card d-flex align-items-center gap-3">
                 <div class="stat-icon bg-success bg-opacity-10 text-success">
-                    <i class="bi bi-cash-stack"></i>
+                  💰  <i class="bi bi-cash-stack"></i>
                 </div>
                 <div>
                     <h3 class="mb-0 fw-bold">XAF 620,000</h3>

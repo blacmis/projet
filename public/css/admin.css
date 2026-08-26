@@ -1,0 +1,240 @@
+:root {
+    --admin-orange: #c47a1a;
+    --admin-orange-dark: #a86512;
+    --sidebar-width: 240px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f5f6f8;
+    color: #212529;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--admin-orange);
+    color: #fff;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 16px 0;
+}
+
+.admin-sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px 24px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.admin-sidebar .brand img,
+.admin-sidebar .brand .logo-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-left: 4px solid transparent;
+    transition: background 0.15s;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+    background: rgba(0,0,0,0.15);
+    color: #fff;
+    border-left-color: #fff;
+}
+
+/* Main */
+.admin-main {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+}
+
+.admin-header {
+    background: #fff;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.admin-header .welcome {
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+.admin-header .search-box {
+    display: flex;
+    align-items: center;
+    background: #f1f3f5;
+    border-radius: 24px;
+    padding: 8px 16px;
+    min-width: 260px;
+}
+
+.admin-header .search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.admin-content {
+    padding: 24px 28px;
+}
+
+/* Cards stats */
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    height: 100%;
+}
+
+.stat-card .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-card .stat-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.stat-card .stat-sub {
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.stat-sub.up { color: #198754; }
+.stat-sub.down { color: #dc3545; }
+.stat-sub.warn { color: #e67e22; }
+.stat-sub.danger { color: #dc3545; }
+
+/* Tables */
+.admin-table-wrap {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.admin-table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table-wrap th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+}
+
+.admin-table-wrap td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: 0.9rem;
+}
+
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-good { background: #d1e7dd; color: #0f5132; }
+.badge-low { background: #fff3cd; color: #664d03; }
+.badge-out { background: #f8d7da; color: #842029; }
+.badge-done { background: #d1e7dd; color: #0f5132; }
+
+/* ===== Logo unifié MarketSmart ===== */
+.admin-sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 20px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.admin-sidebar .brand .logo-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+.admin-sidebar .brand .logo-circle svg {
+    width: 24px;
+    height: 24px;
+}
+
+.admin-sidebar .brand .brand-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #fff;
+}
+
+.admin-sidebar .brand .brand-name span {
+    color: #fbbf24;
+}
+
+.admin-sidebar .brand .brand-sub {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,.85);
+    text-transform: uppercase;
+    margin-top: 2px;
+}

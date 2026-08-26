@@ -1,5 +1,5 @@
 @extends('manager.layouts.app')
-@section('title', 'My Profile - MarketSmart')
+@section('page_title', 'My Profile')
 @section('content')
     <div class="page-header">
         <h4 class="page-title"> Inventory Manager Profile</h4>

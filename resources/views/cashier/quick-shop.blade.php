@@ -48,6 +48,4 @@
     <div class="empty-state" style="grid-column:1/-1">No products found.</div>
 @endforelse
 </div>
-
-<div class="pagination">{{ $products->links() }}</div>
 @endsection

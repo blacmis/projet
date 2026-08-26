@@ -1,54 +1,45 @@
 <aside class="sidebar">
-    <div class="brand">
-        <div class="brand-mark">M</div>
-        <div>
-            <div class="sidebar-logo">
-                <img src="" alt="">
+    <div class="sidebar-logo">
+        <a href="{{ route('cashier.payment') }}">
+            <div class="logo-circle">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13L5.4 5M7 13l-2.3 2.3c-.4.4-.1 1.1.4 1.1H17M17 13v6a1 1 0 01-1 1H8a1 1 0 01-1-1v-6"
+                          stroke="#c47a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="9" cy="20" r="1" fill="#c47a1a"/>
+                    <circle cx="16" cy="20" r="1" fill="#c47a1a"/>
+                </svg>
             </div>
-        </div>
+            <div>
+                <div class="brand-name">Market<span>Smart</span></div>
+                <div class="brand-sub">Market</div>
+            </div>
+        </a>
     </div>
 
     <nav class="nav">
-   <a class="nav-link {{ request()->routeIs('cashier.quick-shop') ? 'active' : '' }}" href="{{ route('cashier.quick-shop') }}">
-            <span class="nav-icon">⊞</span> Quick Shop
+        <a href="{{ route('cashier.quick-shop') }}"
+           class="nav-link {{ request()->routeIs('cashier.quick-shop') ? 'active' : '' }}">
+            <span>⊞</span> Boutique rapide
         </a>
-
-        <a class="nav-link {{ request()->routeIs('cashier.payment') ? 'active' : '' }}" href="{{ route('cashier.payment') }}">
-            <span class="nav-icon">▣</span> Payment
+        <a href="{{ route('cashier.payment') }}"
+           class="nav-link {{ request()->routeIs('cashier.payment') ? 'active' : '' }}">
+            <span>$</span> Paiement
         </a>
-
- <a class="nav-link {{ request()->routeIs('cashier.receipt') ? 'active' : '' }}" href="{{ route('cashier.receipt') }}">
-            <span class="nav-icon">▧</span> Receipt
+        <a href="{{ route('cashier.receipt') }}"
+           class="nav-link {{ request()->routeIs('cashier.receipt') ? 'active' : '' }}">
+            <span>▤</span> Reçu
         </a>
-        <a class="nav-link {{ request()->routeIs('cashier.sales*') ? 'active' : '' }}" href="{{ route('cashier.sales') }}">
-            <span class="nav-icon">▤</span> Sales History
+        <a href="{{ route('cashier.sales') }}"
+           class="nav-link {{ request()->routeIs('cashier.sales*') || request()->routeIs('cashier.sale.*') ? 'active' : '' }}">
+            <span>☰</span> Historique des ventes
         </a>
-
-       
-
-        <a class="nav-link {{ request()->routeIs('cashier.summary') ? 'active' : '' }}" href="{{ route('cashier.summary') }}">
-            <span class="nav-icon">▥</span> Daily Summary
+        <a href="{{ route('cashier.summary') }}"
+           class="nav-link {{ request()->routeIs('cashier.summary') ? 'active' : '' }}">
+            <span>▤</span> Résumé quotidien
         </a>
-
-        <a class="nav-link {{ request()->routeIs('cashier.notifications*') ? 'active' : '' }}" href="{{ route('cashier.notifications') }}">
-            <span class="nav-icon">♢</span> Notifications
+        <a href="{{ route('cashier.notifications') }}"
+           class="nav-link {{ request()->routeIs('cashier.notifications') ? 'active' : '' }}">
+            <span>◇</span> Notifications
         </a>
-        
-        <a class="nav-link {{ request()->routeIs('cashier.profile*') ? 'active' : '' }}" href="{{ route('cashier.profile') }}">
-            <span class="nav-icon">◉</span> Profile
-        </a>
-
-
-     
     </nav>
-
-    <div class="sidebar-footer">
-        <div class="user-mini">
-            <div class="avatar">{{ strtoupper(substr(auth()->user()->name ?? 'CA', 0, 2)) }}</div>
-            <div>
-                <strong>{{ auth()->user()->name ?? 'Cashier' }}</strong>
-                <small>Point of Sale</small>
-            </div>
-        </div>
-    </div>
 </aside>

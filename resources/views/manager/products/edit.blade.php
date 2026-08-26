@@ -63,7 +63,7 @@
                 </div>
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn btn-orange">
-                        <i class="bi bi-check-lg"></i> Enregistrer les modifications
+                        <i class="bi bi-check-lg"></i> + Enregistrer les modifications
                     </button>
                     <a href="{{ route('manager.products.index') }}" class="btn btn-outline-secondary">
                         Annuler
