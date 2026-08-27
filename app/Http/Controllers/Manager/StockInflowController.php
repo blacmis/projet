@@ -1,98 +1,89 @@
 <?php
+
 namespace App\Http\Controllers\Manager;
+
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\StockInflow;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
+
 class StockInflowController extends Controller
 {
+    private function refreshStatus(Product $product): void
+    {
+        if ($product->stock_quantity <= 0) {
+            $product->status = 'Out of Stock';
+        } elseif ($product->stock_quantity <= ($product->low_stock_threshold ?? 5)) {
+            $product->status = 'Low Stock';
+        } else {
+            $product->status = 'In Stock';
+        }
+        $product->save();
+    }
+
     public function index(Request $request)
     {
-        $allInflows = [
-            [
-                'id' => 1,
-                'date' => '08/05/2026',
-                'product' => 'Rice 50kg',
-                'quantity' => 100,
-                'unit_cost' => 2000,
-                'total_value' => 200000,
-                'supplier' => 'ABC Suppliers',
-            ],
-            [
-                'id' => 2,
-                'date' => '08/05/2026',
-                'product' => 'Cooking Oil 20L',
-                'quantity' => 50,
-                'unit_cost' => 3000,
-                'total_value' => 150000,
-                'supplier' => 'GoodFoods Ltd',
-            ],
-            [
-                'id' => 3,
-                'date' => '07/05/2026',
-                'product' => 'Sugar 50kg',
-                'quantity' => 80,
-                'unit_cost' => 2200,
-                'total_value' => 176000,
-                'supplier' => 'Sweet Supply',
-            ],
-            [
-                'id' => 4,
-                'date' => '06/05/2026',
-                'product' => 'Milk 1L',
-                'quantity' => 200,
-                'unit_cost' => 450,
-                'total_value' => 90000,
-                'supplier' => 'Dairy Farm',
-            ],
-            [
-                'id' => 5,
-                'date' => '05/05/2026',
-                'product' => 'White Flour 25kg',
-                'quantity' => 40,
-                'unit_cost' => 2500,
-                'total_value' => 100000,
-                'supplier' => 'Millers Ltd',
-            ],
-        ];
         $search = $request->input('search');
+
+        $query = StockInflow::with(['product', 'supplier'])->orderByDesc('date_received');
+
         if ($search) {
-            $inflows = array_filter($allInflows, function ($item) use ($search) {
-                return str_contains(strtolower($item['product']), strtolower($search)) ||
-                       str_contains(strtolower($item['supplier']), strtolower($search));
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('product', fn ($p) => $p->where('name', 'like', "%{$search}%"))
+                  ->orWhereHas('supplier', fn ($s) => $s->where('name', 'like', "%{$search}%"));
             });
-        } else {
-            $inflows = $allInflows;
         }
-        return view('manager.stock-inflow.index', compact('inflows', 'search'));
+
+        $inflows = $query->paginate(10)->withQueryString();
+
+        $products = Product::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
+
+        $todayCount = StockInflow::whereDate('date_received', today())->count();
+        $todayValue = StockInflow::whereDate('date_received', today())->sum('total_value');
+        $activeSuppliers = Supplier::count();
+
+        return view('manager.stock-inflow.index', compact(
+            'inflows', 'products', 'suppliers', 'search', 'todayCount', 'todayValue', 'activeSuppliers'
+        ));
     }
+
     public function create()
     {
-        // Listes fictives pour les selects
-        $products = [
-            'Rice 50kg',
-            'Cooking Oil 20L',
-            'Sugar 50kg',
-            'Milk 1L',
-            'White Flour 25kg',
-        ];
-        $suppliers = [
-            'ABC Suppliers',
-            'GoodFoods Ltd',
-            'Sweet Supply',
-            'Dairy Farm',
-            'Millers Ltd',
-        ];
-        return view('manager.stock-inflow.create', compact('products', 'suppliers'));
+        return redirect()->route('manager.stock-inflow.index');
     }
+
     public function store(Request $request)
     {
         $request->validate([
-            'product' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'unit_cost' => 'required|numeric|min:0',
-            'supplier' => 'required|string',
-            'date' => 'required|date',
+            'product_id'    => 'required|exists:products,id',
+            'supplier_id'   => 'nullable|exists:suppliers,id',
+            'quantity'      => 'required|integer|min:1',
+            'unit_cost'     => 'required|numeric|min:0',
+            'date_received' => 'required|date',
+            'expiry_date'   => 'nullable|date',
+            'batch_no'      => 'nullable|string|max:100',
         ]);
+
+        $product = Product::findOrFail($request->product_id);
+
+        StockInflow::create([
+            'product_id'    => $product->id,
+            'supplier_id'   => $request->supplier_id,
+            'batch_no'      => $request->batch_no ?: 'BATCH-' . strtoupper(uniqid()),
+            'quantity'      => $request->quantity,
+            'unit_cost'     => $request->unit_cost,
+            'total_value'   => $request->quantity * $request->unit_cost,
+            'date_received' => $request->date_received,
+            'expiry_date'   => $request->expiry_date,
+        ]);
+
+        $product->stock_quantity += $request->quantity;
+        $product->save();
+        $this->refreshStatus($product);
+
         return redirect()->route('manager.stock-inflow.index')
-                         ->with('success', 'Entrée de stock enregistrée avec succès (données fictives)');
+            ->with('success', 'Entrée de stock enregistrée avec succès.');
     }
 }

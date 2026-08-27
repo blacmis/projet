@@ -50,31 +50,77 @@ class AuthController extends Controller
         'email' => 'required|email',
         'password' => 'required|string|min:6',
     ]);
-
-    $users = $this->users();
     $email = strtolower(trim($request->email));
-
-    // Email n'existe pas
+    $users = $this->users();
+    // --- Compte verrouillé ? ---
+    $locks = session('login_locks', []);
+    if (isset($locks[$email]) && $locks[$email] > time()) {
+        $minutes = (int) ceil(($locks[$email] - time()) / 60);
+        return back()
+            ->withInput($request->only('email'))
+            ->with('error', "Trop de tentatives. Réessayez dans {$minutes} minute(s).");
+    }
+    // Verrou expiré → nettoyer
+    if (isset($locks[$email]) && $locks[$email] <= time()) {
+        unset($locks[$email]);
+        session(['login_locks' => $locks]);
+        $attempts = session('login_attempts', []);
+        unset($attempts[$email]);
+        session(['login_attempts' => $attempts]);
+    }
+    // Email inconnu
     if (!isset($users[$email])) {
+        $this->registerFailedAttempt($email);
         return back()
             ->withInput($request->only('email'))
             ->with('error', 'Aucun compte trouvé avec cet email.');
     }
-
     // Mot de passe incorrect
     if ($users[$email]['password'] !== $request->password) {
+        $locked = $this->registerFailedAttempt($email);
+        if ($locked) {
+            return back()
+                ->withInput($request->only('email'))
+                ->with('error', 'Trop de tentatives. Compte verrouillé 15 minutes.');
+        }
+        $left = 5 - (session('login_attempts')[$email] ?? 0);
         return back()
             ->withInput($request->only('email'))
-            ->with('error', 'Mot de passe incorrect.');
+            ->with('error', "Mot de passe incorrect. Il vous reste {$left} tentative(s).");
     }
-
+    // Succès → reset compteurs
+    $attempts = session('login_attempts', []);
+    unset($attempts[$email]);
+    session(['login_attempts' => $attempts]);
+    $locks = session('login_locks', []);
+    unset($locks[$email]);
+    session(['login_locks' => $locks]);
     session([
         'auth_user' => $email,
         'auth_role' => $users[$email]['role'],
     ]);
-
-    return redirect()->route($users[$email]['redirect'])
+    return redirect()
+        ->route($users[$email]['redirect'])
         ->with('success', 'Connexion réussie.');
+}
+/**
+* Enregistre un échec. Retourne true si le compte vient d'être verrouillé.
+*/
+private function registerFailedAttempt(string $email): bool
+{
+    $attempts = session('login_attempts', []);
+    $attempts[$email] = ($attempts[$email] ?? 0) + 1;
+    session(['login_attempts' => $attempts]);
+    if ($attempts[$email] >= 5) {
+        $locks = session('login_locks', []);
+        $locks[$email] = time() + (15 * 60); // 15 minutes
+        session(['login_locks' => $locks]);
+        // reset compteur après lock
+        $attempts[$email] = 0;
+        session(['login_attempts' => $attempts]);
+        return true;
+    }
+    return false;
 }
     public function showForgot()
     {

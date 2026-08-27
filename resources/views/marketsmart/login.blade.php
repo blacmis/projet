@@ -124,13 +124,23 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="password">Password</label>
-                <input type="password"
-                       class="form-control"
-                       id="password"
-                       name="password"
-                       placeholder="Enter password"
-                       required
-                       autocomplete="current-password">
+                <div class="position-relative">
+                    <input type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                        autocomplete="current-password"
+                        style="padding-right: 42px;">
+                    <button type="button"
+                            id="togglePassword"
+                            class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3"
+                            style="text-decoration:none;color:#666;border:none;background:transparent;z-index:2;"
+                            aria-label="Afficher le mot de passe">
+                        <span id="eyeIcon">👁️</span>
+                    </button>
+                </div>
             </div>
             <button type="submit" class="btn btn-login">Login</button>
         </form>
@@ -139,5 +149,20 @@
             <a href="{{ route('password.request') }}">Forgot Password?</a>
         </div>
     </div>
+    <script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = 'XX';
+            this.setAttribute('aria-label', 'Masquer le mot de passe');
+        } else {
+            input.type = 'password';
+            icon.textContent = '(o)';
+            this.setAttribute('aria-label', 'Afficher le mot de passe');
+        }
+    });
+    </script>
 </body>
 </html>

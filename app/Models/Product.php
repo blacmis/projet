@@ -13,9 +13,11 @@ class Product extends Model
         'name',
         'barcode',
         'category',
+        'unit',
         'price',
         'stock_quantity',
         'low_stock_threshold',
+        'status',
         'is_active',
     ];
 
@@ -27,5 +29,24 @@ class Product extends Model
     public function saleItems()
     {
         return $this->hasMany(SaleItem::class);
+    }
+        public function stockInflows()
+    {
+        return $this->hasMany(StockInflow::class);
+    }
+
+    public function stockOutflows()
+    {
+        return $this->hasMany(StockOutflow::class);
+    }
+
+    public function stockAdjustments()
+    {
+        return $this->hasMany(StockAdjustment::class);
+    }
+
+    public function expiredDamagedGoods()
+    {
+        return $this->hasMany(ExpiredDamagedGood::class);
     }
 }

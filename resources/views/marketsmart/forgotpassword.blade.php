@@ -122,16 +122,47 @@
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
             <div class="mb-3">
-                <label class="form-label" for="email">Email</label>
-                <input type="email"
-                       class="form-control"
-                       id="email"
-                       name="email"
-                       placeholder="Enter email"
-                       value="{{ old('email') }}"
-                       required
-                       autocomplete="email">
-            </div>
+    <label class="form-label" for="password">New Password</label>
+    <div class="position-relative">
+            <input type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Min. 8 characters"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                style="padding-right: 42px;">
+            <button type="button"
+                    class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3 toggle-password"
+                    data-target="password"
+                    style="text-decoration:none;color:#666;border:none;background:transparent;z-index:2;"
+                    aria-label="Afficher le mot de passe">
+                <span class="eye-icon">👁️</span>
+            </button>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="password_confirmation">Confirm Password</label>
+        <div class="position-relative">
+            <input type="password"
+                class="form-control"
+                id="password_confirmation"
+                name="password_confirmation"
+                placeholder="Confirm password"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                style="padding-right: 42px;">
+            <button type="button"
+                    class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3 toggle-password"
+                    data-target="password_confirmation"
+                    style="text-decoration:none;color:#666;border:none;background:transparent;z-index:2;"
+                    aria-label="Afficher le mot de passe">
+                <span class="eye-icon">👁️</span>
+            </button>
+        </div>
+    </div>
             <button type="submit" class="btn btn-login">Send OTP</button>
         </form>
 
@@ -139,5 +170,22 @@
             <a href="{{ route('login') }}">Back to Login</a>
         </div>
     </div>
+    <script>
+    document.querySelectorAll('.toggle-password').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const input = document.getElementById(this.getAttribute('data-target'));
+            const icon = this.querySelector('.eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'XX';
+                this.setAttribute('aria-label', 'Masquer le mot de passe');
+            } else {
+                input.type = 'password';
+                icon.textContent = '(O)';
+                this.setAttribute('aria-label', 'Afficher le mot de passe');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
