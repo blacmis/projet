@@ -47,6 +47,7 @@ class ReceiptController extends Controller
             ];
         }
         $sale->items = $items;
+        
 
         return view('cashier.receipt', compact('sale'));
     }

@@ -31,6 +31,15 @@ use App\Http\Controllers\Cashier\ProfileController as CashierProfileController;
 use App\Http\Controllers\Cashier\NotificationController as CashierNotificationController;
 use App\Http\Controllers\Cashier\QuickShopController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\InventoryActionController;
+use App\Http\Controllers\Admin\SaleActionController;
+use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\SettingsController;
+
+
+
+
 
 
 // ROUTES PUBLIQUES
@@ -40,10 +49,10 @@ Route::get('/', function () {
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'sendOtp'])->middleware('throttle:3,1')->name('password.email');
+Route::post('/forgot-password', [AuthController::class, 'sendOtp'])->name('password.email');
 
 Route::get('/verify-otp', [AuthController::class, 'showOtp'])->name('password.otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:5,1')->name('password.otp.verify');
@@ -86,6 +95,7 @@ Route::prefix('manager')
     // Expired
     Route::get('/expired', [ExpiredController::class, 'index'])->name('expired.index');
     Route::get('/expiring-soon', [ExpiredController::class, 'expiringSoon'])->name('expiring.soon');
+    Route::post('/expired', [ExpiredController::class, 'store'])->name('expired.store');
     // Suppliers
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
@@ -165,8 +175,30 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
     Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::post('/users/{id}/toggle', [UserController::class, 'toggleStatus'])->name('users.toggle');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/inventory-actions', [InventoryActionController::class, 'index'])->name('inventory-actions.index');
+    Route::post('/inventory-actions/{id}/adjust', [InventoryActionController::class, 'adjust'])->name('inventory-actions.adjust');
+    Route::post('/inventory-actions/{id}/status', [InventoryActionController::class, 'setStatus'])->name('inventory-actions.status');
+    Route::get('/sale-actions', [SaleActionController::class, 'index'])->name('sale-actions.index');
+    Route::post('/sale-actions/{id}/cancel', [SaleActionController::class, 'cancel'])->name('sale-actions.cancel');
+    Route::post('/sale-actions/{id}/restore', [SaleActionController::class, 'restore'])->name('sale-actions.restore');
+    Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log.index');
+    Route::post('/audit-log/clear', [AuditLogController::class, 'clear'])->name('audit-log.clear');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::post('/settings/reset', [SettingsController::class, 'reset'])->name('settings.reset');
+    Route::post('/users/{id}/unlock', [UserController::class, 'unlock'])->name('users.unlock');
     });
 //acceptation des route par le midleware
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('role:admin,manager,cashier')
     ->name('logout');
+
+
+// dans Route::prefix('admin')->middleware('role:admin')->group(...)
+

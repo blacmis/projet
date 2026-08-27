@@ -1,77 +1,67 @@
 <?php
+
 namespace App\Http\Controllers\Manager;
+
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
+
 class ProductController extends Controller
 {
-    // 1. LISTE DES PRODUITS
-     public function index(Request $request)
-{
-    $allProducts = [
-        [
-            'id' => 1,
-            'name' => 'Rice 5kg',
-            'category' => 'Grains',
-            'unit' => 'Bag',
-            'selling_price' => 2500,
-            'quantity' => 150,
-            'status' => 'In Stock',
-        ],
-        [
-            'id' => 2,
-            'name' => 'Cooking Oil 2L',
-            'category' => 'Beverage',
-            'unit' => 'Piece',
-            'selling_price' => 3500,
-            'quantity' => 80,
-            'status' => 'In Stock',
-        ],
-        [
-            'id' => 3,
-            'name' => 'Sugar 5kg',
-            'category' => 'Groceries',
-            'unit' => 'Bag',
-            'selling_price' => 2200,
-            'quantity' => 60,
-            'status' => 'In Stock',
-        ],
-        [
-            'id' => 4,
-            'name' => 'Milk 1L',
-            'category' => 'Dairy',
-            'unit' => 'Piece',
-            'selling_price' => 500,
-            'quantity' => 120,
-            'status' => 'In Stock',
-        ],
-        [
-            'id' => 5,
-            'name' => 'White Flour 25kg',
-            'category' => 'Groceries',
-            'unit' => 'Bag',
-            'selling_price' => 1000,
-            'quantity' => 40,
-            'status' => 'Low Stock',
-        ],
-    ];
-    // Recherche
-    $search = $request->input('search');
-    if ($search) {
-        $products = array_filter($allProducts, function ($product) use ($search) {
-            return str_contains(strtolower($product['name']), strtolower($search)) ||
-                   str_contains(strtolower($product['category']), strtolower($search));
-        });
-    } else {
-        $products = $allProducts;
+    /**
+     * Transforme un Product Eloquent en tableau
+     * compatible avec tes vues (selling_price, quantity, ...)
+     */
+    private function toViewArray(Product $p): array
+    {
+        return [
+            'id' => $p->id,
+            'name' => $p->name,
+            'category' => $p->category,
+            'unit' => $p->unit,
+            'selling_price' => $p->price,
+            'quantity' => $p->stock_quantity,
+            'status' => $p->status ?? 'In Stock',
+        ];
     }
-    return view('manager.products.index', compact('products', 'search'));
-}
+
+    private function refreshStatus(Product $product): void
+    {
+        if ($product->stock_quantity <= 0) {
+            $product->status = 'Out of Stock';
+        } elseif ($product->stock_quantity <= ($product->low_stock_threshold ?? 5)) {
+            $product->status = 'Low Stock';
+        } else {
+            $product->status = 'In Stock';
+        }
+        $product->save();
+    }
+
+    // 1. LISTE DES PRODUITS (depuis la BDD)
+    public function index(Request $request)
+    {
+        $query = Product::query()->orderBy('id');
+
+        $search = $request->input('search');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->get()->map(fn (Product $p) => $this->toViewArray($p))->all();
+
+        return view('manager.products.index', compact('products', 'search'));
+    }
+
     // 2. FORMULAIRE D'AJOUT
     public function create()
     {
         return view('manager.products.create');
     }
-    // 3. ENREGISTRER UN NOUVEAU PRODUIT
+
+    // 3. ENREGISTRER UN NOUVEAU PRODUIT (BDD)
     public function store(Request $request)
     {
         $request->validate([
@@ -81,68 +71,40 @@ class ProductController extends Controller
             'selling_price' => 'required|numeric',
             'quantity' => 'required|integer',
         ]);
-        // Pour l'instant on simule seulement (données fictives)
+
+        $product = Product::create([
+            'name' => $request->name,
+            'category' => $request->category,
+            'unit' => $request->unit,
+            'price' => $request->selling_price,
+            'stock_quantity' => $request->quantity,
+            'low_stock_threshold' => 5,
+            'is_active' => true,
+            'status' => 'In Stock',
+        ]);
+
+        $this->refreshStatus($product);
+
         return redirect()->route('manager.products.index')
-                         ->with('success', 'Produit ajouté avec succès (données fictives)');
+            ->with('success', 'Produit ajouté avec succès.');
     }
+
     // 4. FORMULAIRE DE MODIFICATION
     public function edit(int $id)
     {
-        $products = [
-            1 => [
-                'id' => 1,
-                'name' => 'Rice 5kg',
-                'category' => 'Grains',
-                'unit' => 'Bag',
-                'selling_price' => 2500,
-                'quantity' => 150,
-                'status' => 'In Stock',
-            ],
-            2 => [
-                'id' => 2,
-                'name' => 'Cooking Oil 2L',
-                'category' => 'Beverage',
-                'unit' => 'Piece',
-                'selling_price' => 3500,
-                'quantity' => 80,
-                'status' => 'In Stock',
-            ],
-            3 => [
-                'id' => 3,
-                'name' => 'Sugar 5kg',
-                'category' => 'Groceries',
-                'unit' => 'Bag',
-                'selling_price' => 2200,
-                'quantity' => 60,
-                'status' => 'In Stock',
-            ],
-            4 => [
-                'id' => 4,
-                'name' => 'Milk 1L',
-                'category' => 'Dairy',
-                'unit' => 'Piece',
-                'selling_price' => 500,
-                'quantity' => 120,
-                'status' => 'In Stock',
-            ],
-            5 => [
-                'id' => 5,
-                'name' => 'White Flour 25kg',
-                'category' => 'Groceries',
-                'unit' => 'Bag',
-                'selling_price' => 1000,
-                'quantity' => 40,
-                'status' => 'Low Stock',
-            ],
-        ];
-        if (!isset($products[$id])) {
+        $p = Product::find($id);
+
+        if (!$p) {
             return redirect()->route('manager.products.index')
-                             ->with('error', 'Produit introuvable');
+                ->with('error', 'Produit introuvable');
         }
-        $product = $products[$id];
+
+        $product = $this->toViewArray($p);
+
         return view('manager.products.edit', compact('product'));
     }
-    // 5. ENREGISTRER LA MODIFICATION
+
+    // 5. ENREGISTRER LA MODIFICATION (BDD)
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -152,15 +114,38 @@ class ProductController extends Controller
             'selling_price' => 'required|numeric',
             'quantity' => 'required|integer',
         ]);
-        // Pour l'instant on simule seulement
+
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->route('manager.products.index')
+                ->with('error', 'Produit introuvable');
+        }
+
+        $product->update([
+            'name' => $request->name,
+            'category' => $request->category,
+            'unit' => $request->unit,
+            'price' => $request->selling_price,
+            'stock_quantity' => $request->quantity,
+        ]);
+
+        $this->refreshStatus($product);
+
         return redirect()->route('manager.products.index')
-                         ->with('success', 'Produit modifié avec succès (données fictives)');
+            ->with('success', 'Produit modifié avec succès.');
     }
-    // 6. SUPPRIMER UN PRODUIT
+
+    // 6. SUPPRIMER UN PRODUIT (BDD)
     public function destroy($id)
     {
-        // Pour l'instant on simule seulement
+        $product = Product::find($id);
+
+        if ($product) {
+            $product->delete();
+        }
+
         return redirect()->route('manager.products.index')
-                         ->with('success', 'Produit supprimé avec succès (données fictives)');
+            ->with('success', 'Produit supprimé avec succès.');
     }
 }

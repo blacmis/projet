@@ -1,112 +1,98 @@
 <?php
+
 namespace App\Http\Controllers\Manager;
+
 use App\Http\Controllers\Controller;
+use App\Models\ExpiredDamagedGood;
+use App\Models\Product;
+use App\Models\StockInflow;
 use Illuminate\Http\Request;
+
 class ExpiredController extends Controller
 {
+    private function refreshStatus(Product $product): void
+    {
+        if ($product->stock_quantity <= 0) {
+            $product->status = 'Out of Stock';
+        } elseif ($product->stock_quantity <= ($product->low_stock_threshold ?? 5)) {
+            $product->status = 'Low Stock';
+        } else {
+            $product->status = 'In Stock';
+        }
+        $product->save();
+    }
+
     public function index(Request $request)
     {
-        $allExpired = [
-            [
-                'id' => 1,
-                'product' => 'Yogurt 500ml',
-                'batch_no' => 'YOG2305',
-                'expiry_date' => '01/05/2026',
-                'quantity' => 8,
-            ],
-            [
-                'id' => 2,
-                'product' => 'Milk 1L',
-                'batch_no' => 'MILK2305',
-                'expiry_date' => '02/05/2026',
-                'quantity' => 6,
-            ],
-            [
-                'id' => 3,
-                'product' => 'Bread Loaf',
-                'batch_no' => 'BRD2305',
-                'expiry_date' => '03/05/2026',
-                'quantity' => 12,
-            ],
-            [
-                'id' => 4,
-                'product' => 'Sausage Pack',
-                'batch_no' => 'SAU2305',
-                'expiry_date' => '04/05/2026',
-                'quantity' => 5,
-            ],
-            [
-                'id' => 5,
-                'product' => 'Cheese 200g',
-                'batch_no' => 'CHZ2305',
-                'expiry_date' => '05/05/2026',
-                'quantity' => 4,
-            ],
-        ];
         $search = $request->input('search');
+
+        $query = ExpiredDamagedGood::with('product')->orderByDesc('created_at');
+
         if ($search) {
-            $expired = array_filter($allExpired, function ($item) use ($search) {
-                return str_contains(strtolower($item['product']), strtolower($search)) ||
-                       str_contains(strtolower($item['batch_no']), strtolower($search));
-            });
-        } else {
-            $expired = $allExpired;
+            $query->whereHas('product', fn ($p) => $p->where('name', 'like', "%{$search}%"));
         }
-        return view('manager.expired.index', compact('expired', 'search'));
+
+        $records = $query->paginate(10)->withQueryString();
+        $products = Product::orderBy('name')->get();
+
+        $expiredTodayCount = ExpiredDamagedGood::where('type', 'expired')
+            ->whereDate('created_at', today())->sum('quantity');
+
+        $expiringSoonCount = StockInflow::whereNotNull('expiry_date')
+            ->whereBetween('expiry_date', [today(), today()->addDays(7)])
+            ->sum('quantity');
+
+        $estimatedLoss = ExpiredDamagedGood::sum('estimated_loss');
+
+        return view('manager.expired.index', compact(
+            'records', 'products', 'search', 'expiredTodayCount', 'expiringSoonCount', 'estimatedLoss'
+        ));
     }
-    public function expiringSoon(Request $request)
+
+    public function expiringSoon()
     {
-        $allExpiring = [
-            [
-                'id' => 1,
-                'product' => 'Milk 1L',
-                'batch_no' => 'MILK2405',
-                'expiry_date' => '25/05/2026',
-                'days_left' => 7,
-                'quantity' => 30,
-            ],
-            [
-                'id' => 2,
-                'product' => 'Yogurt 500ml',
-                'batch_no' => 'YOG2405',
-                'expiry_date' => '28/05/2026',
-                'days_left' => 10,
-                'quantity' => 40,
-            ],
-            [
-                'id' => 3,
-                'product' => 'Cheese 200g',
-                'batch_no' => 'CHZ2405',
-                'expiry_date' => '02/06/2026',
-                'days_left' => 15,
-                'quantity' => 25,
-            ],
-            [
-                'id' => 4,
-                'product' => 'Butter 250g',
-                'batch_no' => 'BUT2405',
-                'expiry_date' => '05/06/2026',
-                'days_left' => 18,
-                'quantity' => 20,
-            ],
-            [
-                'id' => 5,
-                'product' => 'Juice 1L',
-                'batch_no' => 'JUC2405',
-                'expiry_date' => '07/06/2026',
-                'days_left' => 20,
-                'quantity' => 60,
-            ],
-        ];
-        $search = $request->input('search');
-        if ($search) {
-            $expiring = array_filter($allExpiring, function ($item) use ($search) {
-                return str_contains(strtolower($item['product']), strtolower($search)) ||
-                       str_contains(strtolower($item['batch_no']), strtolower($search));
-            });
-        } else {
-            $expiring = $allExpiring;
+        $batches = StockInflow::with('product')
+            ->whereNotNull('expiry_date')
+            ->whereBetween('expiry_date', [today(), today()->addDays(7)])
+            ->orderBy('expiry_date')
+            ->paginate(10);
+
+        return view('manager.expired.expiring-soon', compact('batches'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'product_id'     => 'required|exists:products,id',
+            'type'           => 'required|in:expired,damaged',
+            'quantity'       => 'required|integer|min:1',
+            'batch_no'       => 'nullable|string|max:100',
+            'expiry_date'    => 'nullable|date',
+            'estimated_loss' => 'nullable|numeric|min:0',
+        ]);
+
+        $product = Product::findOrFail($request->product_id);
+
+        if ($request->quantity > $product->stock_quantity) {
+            return back()->withInput()
+                ->with('error', 'Quantité supérieure au stock disponible (' . $product->stock_quantity . ').');
         }
-        return view('manager.expired.expiring-soon', compact('expiring', 'search'));
+
+        ExpiredDamagedGood::create([
+            'product_id'     => $product->id,
+            'batch_no'       => $request->batch_no,
+            'type'           => $request->type,
+            'quantity'       => $request->quantity,
+            'expiry_date'    => $request->expiry_date,
+            'estimated_loss' => $request->estimated_loss ?? ($request->quantity * $product->price),
+            'status'         => 'Retiré du stock',
+        ]);
+
+        $product->stock_quantity -= $request->quantity;
+        $product->save();
+        $this->refreshStatus($product);
+
+        return redirect()->route('manager.expired.index')
+            ->with('success', 'Produit retiré du stock avec succès.');
     }
 }

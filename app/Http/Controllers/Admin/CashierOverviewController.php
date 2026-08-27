@@ -45,7 +45,7 @@ class CashierOverviewController extends Controller
             $method = strtolower($request->payment_method);
             $recentSales = $recentSales->filter(fn ($s) => strtolower($s->payment_method) === $method)->values();
         }
-
+        
         return view('admin.cashier', compact('stats', 'products', 'recentSales'));
     }
 }
