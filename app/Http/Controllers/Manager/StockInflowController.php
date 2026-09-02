@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Product;
 use App\Models\StockInflow;
 use App\Models\Supplier;
@@ -82,6 +83,13 @@ class StockInflowController extends Controller
         $product->stock_quantity += $request->quantity;
         $product->save();
         $this->refreshStatus($product);
+
+        ActivityLog::record(
+            'stock',
+            'Stock Received',
+            "{$request->quantity} units of {$product->name} received",
+            'STK-REC-' . now()->format('YmdHis')
+        );
 
         return redirect()->route('manager.stock-inflow.index')
             ->with('success', 'Entrée de stock enregistrée avec succès.');

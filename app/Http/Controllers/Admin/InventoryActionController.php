@@ -1,112 +1,108 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Admin\AuditLogController;
+
 class InventoryActionController extends Controller
 {
-    private function defaultProducts(): array
+    private function refreshStatus(Product $product): void
+    {
+        if ($product->stock_quantity <= 0) {
+            $product->status = 'Out of Stock';
+        } elseif ($product->stock_quantity <= ($product->low_stock_threshold ?? 5)) {
+            $product->status = 'Low Stock';
+        } else {
+            $product->status = 'In Stock';
+        }
+        $product->save();
+    }
+
+    private function toArray(Product $p): array
     {
         return [
-            ['id' => 1, 'code' => '00001', 'name' => 'Coca Cola 1L', 'category' => 'Beverage', 'stock' => 100, 'min_stock' => 20, 'status' => 'In Stock'],
-            ['id' => 2, 'code' => '00002', 'name' => 'Rice 50kg', 'category' => 'Grains', 'stock' => 30, 'min_stock' => 40, 'status' => 'Low Stock'],
-            ['id' => 3, 'code' => '00003', 'name' => 'Sardine', 'category' => 'Grocery', 'stock' => 0, 'min_stock' => 15, 'status' => 'Out of Stock'],
-            ['id' => 4, 'code' => '00004', 'name' => 'Detol Soap', 'category' => 'Household', 'stock' => 50, 'min_stock' => 10, 'status' => 'In Stock'],
-            ['id' => 5, 'code' => '00005', 'name' => 'Chicken Egg (30pcs)', 'category' => 'Grocery', 'stock' => 20, 'min_stock' => 25, 'status' => 'Low Stock'],
+            'id' => $p->id,
+            'code' => str_pad((string) $p->id, 5, '0', STR_PAD_LEFT),
+            'name' => $p->name,
+            'category' => $p->category,
+            'stock' => $p->stock_quantity,
+            'min_stock' => $p->low_stock_threshold,
+            'status' => $p->status,
         ];
     }
-    private function getProducts(): array
-    {
-        if (!session()->has('admin_inventory')) {
-            session(['admin_inventory' => $this->defaultProducts()]);
-        }
-        return session('admin_inventory');
-    }
-    private function saveProducts(array $products): void
-    {
-        session(['admin_inventory' => array_values($products)]);
-    }
-    private function refreshStatus(array &$product): void
-    {
-        if ($product['stock'] <= 0) {
-            $product['status'] = 'Out of Stock';
-        } elseif ($product['stock'] <= $product['min_stock']) {
-            $product['status'] = 'Low Stock';
-        } else {
-            $product['status'] = 'In Stock';
-        }
-    }
+
     public function index(Request $request)
     {
-        $products = collect($this->getProducts());
+        $query = Product::query();
+
         if ($request->filled('q')) {
-            $q = strtolower($request->q);
-            $products = $products->filter(function ($p) use ($q) {
-                return str_contains(strtolower($p['name']), $q)
-                    || str_contains(strtolower($p['code']), $q);
-            })->values();
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('id', 'like', "%{$q}%");
+            });
         }
+
         if ($request->filled('status') && $request->status !== 'all') {
-            $products = $products->where('status', $request->status)->values();
+            $query->where('status', $request->status);
         }
-        return view('admin.inventory-actions.index', [
-            'products' => $products,
-        ]);
+
+        $products = $query->orderBy('id')->get()->map(fn (Product $p) => $this->toArray($p));
+
+        return view('admin.inventory-actions.index', compact('products'));
     }
+
     public function adjust(Request $request, $id)
     {
         $request->validate([
             'type' => 'required|in:add,remove,set',
             'quantity' => 'required|integer|min:0',
         ]);
-        $products = $this->getProducts();
-        $found = false;
-        foreach ($products as $i => $p) {
-            if ((int) $p['id'] === (int) $id) {
-                if ($request->type === 'add') {
-                    $products[$i]['stock'] += (int) $request->quantity;
-                } elseif ($request->type === 'remove') {
-                    $products[$i]['stock'] = max(0, $products[$i]['stock'] - (int) $request->quantity);
-                } else {
-                    $products[$i]['stock'] = (int) $request->quantity;
-                }
-                $this->refreshStatus($products[$i]);
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
+
+        $product = Product::find($id);
+
+        if (!$product) {
             return back()->with('error', 'Produit introuvable.');
         }
-        $this->saveProducts($products);
-            AuditLogController::log(
-                'STOCK_ADJUST',
-                'Product ID '.$id.' type='.$request->type.' qty='.$request->quantity
-            );
-            return back()->with('success', 'Stock mis à jour par l\'administrateur.');
+
+        if ($request->type === 'add') {
+            $product->stock_quantity += (int) $request->quantity;
+        } elseif ($request->type === 'remove') {
+            $product->stock_quantity = max(0, $product->stock_quantity - (int) $request->quantity);
+        } else {
+            $product->stock_quantity = (int) $request->quantity;
+        }
+
+        $product->save();
+        $this->refreshStatus($product);
+
+        AuditLogController::log(
+            'STOCK_ADJUST',
+            "Product ID {$id} type={$request->type} qty={$request->quantity}"
+        );
+
+        return back()->with('success', 'Stock mis à jour par l\'administrateur.');
     }
+
     public function setStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:In Stock,Low Stock,Out of Stock,Unavailable',
         ]);
-        $products = $this->getProducts();
-        $found = false;
-        foreach ($products as $i => $p) {
-            if ((int) $p['id'] === (int) $id) {
-                $products[$i]['status'] = $request->status;
-                if ($request->status === 'Out of Stock' || $request->status === 'Unavailable') {
-                    // optionnel : ne force pas stock à 0 pour Unavailable
-                }
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
+
+        $product = Product::find($id);
+
+        if (!$product) {
             return back()->with('error', 'Produit introuvable.');
         }
-        $this->saveProducts($products);
-        AuditLogController::log('STOCK_STATUS', 'Product ID '.$id.' status='.$request->status);
+
+        $product->status = $request->status;
+        $product->save();
+
+        AuditLogController::log('STOCK_STATUS', "Product ID {$id} status={$request->status}");
+
         return back()->with('success', 'Statut produit mis à jour.');
     }
 }

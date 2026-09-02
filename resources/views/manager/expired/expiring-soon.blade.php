@@ -1,80 +1,38 @@
 @extends('manager.layouts.app')
-@section('title', 'Expiring Soon - MarketSmart')
+
+@section('title', 'Expiring Soon')
+@section('page_title', 'Expiring Soon')
+
 @section('content')
-    <div class="page-header">
-        <h4 class="page-title">Expiring Soon</h4>
-        <div>
-            <a href="{{ route('manager.expired.index') }}" class="btn btn-outline-secondary me-2">
-                Voir les produits expirés
-            </a>
-            <button class="btn btn-orange">Export Report</button>
-        </div>
+<a href="{{ route('manager.expired.index') }}" class="btn btn-link ps-0">← Retour à Expired & Damage Goods</a>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr class="text-muted text-uppercase small">
+                    <th>#</th><th>Product</th><th>Batch No</th><th>Expiry Date</th><th>Days Left</th><th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($batches as $i => $b)
+                <tr>
+                    <td>{{ $batches->firstItem() + $i }}</td>
+                    <td>{{ $b->product->name ?? '—' }}</td>
+                    <td>{{ $b->batch_no ?? '—' }}</td>
+                    <td>{{ $b->expiry_date->format('d/m/Y') }}</td>
+                    <td>
+                        @php $days = now()->diffInDays($b->expiry_date, false); @endphp
+                        <span class="badge {{ $days <= 7 ? 'bg-danger' : 'bg-warning text-dark' }}">{{ $days }} days</span>
+                    </td>
+                    <td>{{ $b->quantity }} units</td>
+                </tr>
+                @empty
+                <tr><td colspan="6" class="text-center text-muted py-4">Aucun produit n'expire dans les 7 prochains jours.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="mb-3">
-                <form action="{{ route('manager.expiring.soon') }}" method="GET">
-                    <div class="search-box">
-                        <i class="bi bi-search"></i>
-                        <input type="text"
-                               name="search"
-                               class="form-control"
-                               placeholder="Search inventory..."
-                               value="{{ $search ?? '' }}">
-                    </div>
-                </form>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Product</th>
-                            <th>Batch No.</th>
-                            <th>Expiry Date</th>
-                            <th>Days Left</th>
-                            <th>Quantity</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($expiring as $item)
-                            <tr>
-                                <td>{{ $item['id'] }}</td>
-                                <td>{{ $item['product'] }}</td>
-                                <td>{{ $item['batch_no'] }}</td>
-                                <td>{{ $item['expiry_date'] }}</td>
-                                <td>
-                                    @if($item['days_left'] <= 7)
-                                        <span class="text-danger fw-bold">{{ $item['days_left'] }} days</span>
-                                    @elseif($item['days_left'] <= 15)
-                                        <span class="text-warning fw-bold">{{ $item['days_left'] }} days</span>
-                                    @else
-                                        <span>{{ $item['days_left'] }} days</span>
-                                    @endif
-                                </td>
-                                <td>{{ $item['quantity'] }} units</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
-                                    Aucun produit trouvé
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <small class="text-muted">
-                    1 to {{ count($expiring) }} of {{ count($expiring) }}
-                </small>
-            </div>
-        </div>
-    </div>
+    {{ $batches->links() }}
+</div>
 @endsection

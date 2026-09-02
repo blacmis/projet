@@ -16,6 +16,7 @@ class Product extends Model
         'unit',
         'price',
         'stock_quantity',
+        'reference_stock',
         'low_stock_threshold',
         'status',
         'is_active',

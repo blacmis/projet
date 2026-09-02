@@ -3,24 +3,39 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\Concerns\HasInventoryStats;
+use App\Models\Sale;
 
 class DashboardController extends Controller
 {
+    use HasInventoryStats;
+
     public function index()
     {
-        $stats = (object) [
-            'total_products' => 1245,
-            'available_products' => 1200,
-            'unavailable_products' => 45,
-            'today_sales' => 96,
-            'today_sales_change' => '+22% vs Yesterday',
-            'today_revenue' => 4769000,
-            'today_revenue_change' => '+20.6% vs Yesterday',
-            'low_stock' => 24,
-            'expiring_soon' => 18,
-            'expired' => 7,
-        ];
+        $base = $this->inventoryStats();
+
+        $todaySalesCount = Sale::where('status', 'completed')->whereDate('created_at', today())->count();
+        $yesterdaySalesCount = Sale::where('status', 'completed')->whereDate('created_at', today()->subDay())->count();
+
+        $todayRevenue = Sale::where('status', 'completed')->whereDate('created_at', today())->sum('total');
+        $yesterdayRevenue = Sale::where('status', 'completed')->whereDate('created_at', today()->subDay())->sum('total');
+
+        $stats = (object) array_merge((array) $base, [
+            'today_sales' => $todaySalesCount,
+            'today_sales_change' => $this->percentChange($todaySalesCount, $yesterdaySalesCount) . ' vs Yesterday',
+            'today_revenue' => $todayRevenue,
+            'today_revenue_change' => $this->percentChange($todayRevenue, $yesterdayRevenue) . ' vs Yesterday',
+        ]);
 
         return view('admin.dashboard', compact('stats'));
+    }
+
+    private function percentChange($today, $yesterday): string
+    {
+        if ($yesterday <= 0) {
+            return $today > 0 ? '+100%' : '0%';
+        }
+        $change = round((($today - $yesterday) / $yesterday) * 100);
+        return ($change >= 0 ? '+' : '') . $change . '%';
     }
 }

@@ -1,60 +1,41 @@
 <?php
+
 namespace App\Http\Controllers\Manager;
+
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
+
 class CategoryController extends Controller
 {
+    // Palette utilisée pour assigner automatiquement une couleur à la création
+    private array $colors = ['primary', 'success', 'warning', 'info', 'danger'];
+
     // 1. LISTE DES CATÉGORIES
     public function index(Request $request)
     {
-        $allCategories = [
-            [
-                'id' => 1,
-                'name' => 'Grains',
-                'description' => 'All grain products',
-                'color' => 'primary',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Groceries',
-                'description' => 'General grocery items',
-                'color' => 'success',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Beverages',
-                'description' => 'Beverages and drinks',
-                'color' => 'warning',
-            ],
-            [
-                'id' => 4,
-                'name' => 'Dairy',
-                'description' => 'Dairy products',
-                'color' => 'info',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Household',
-                'description' => 'Household items',
-                'color' => 'danger',
-            ],
-        ];
         $search = $request->input('search');
+
+        $query = Category::query()->orderBy('id');
+
         if ($search) {
-            $categories = array_filter($allCategories, function ($category) use ($search) {
-                return str_contains(strtolower($category['name']), strtolower($search)) ||
-                       str_contains(strtolower($category['description']), strtolower($search));
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             });
-        } else {
-            $categories = $allCategories;
         }
+
+        $categories = $query->get();
+
         return view('manager.categories.index', compact('categories', 'search'));
     }
+
     // 2. FORMULAIRE D'AJOUT
     public function create()
     {
         return view('manager.categories.create');
     }
+
     // 3. ENREGISTRER
     public function store(Request $request)
     {
@@ -62,51 +43,32 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
         ]);
+
+        $nextColor = $this->colors[Category::count() % count($this->colors)];
+
+        Category::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'color' => $nextColor,
+        ]);
+
         return redirect()->route('manager.categories.index')
-                         ->with('success', 'Catégorie ajoutée avec succès (données fictives)');
+            ->with('success', 'Catégorie ajoutée avec succès.');
     }
+
     // 4. FORMULAIRE DE MODIFICATION
     public function edit(int $id)
     {
-        $categories = [
-            1 => [
-                'id' => 1,
-                'name' => 'Grains',
-                'description' => 'All grain products',
-                'color' => 'primary',
-            ],
-            2 => [
-                'id' => 2,
-                'name' => 'Groceries',
-                'description' => 'General grocery items',
-                'color' => 'success',
-            ],
-            3 => [
-                'id' => 3,
-                'name' => 'Beverages',
-                'description' => 'Beverages and drinks',
-                'color' => 'warning',
-            ],
-            4 => [
-                'id' => 4,
-                'name' => 'Dairy',
-                'description' => 'Dairy products',
-                'color' => 'info',
-            ],
-            5 => [
-                'id' => 5,
-                'name' => 'Household',
-                'description' => 'Household items',
-                'color' => 'danger',
-            ],
-        ];
-        if (!isset($categories[$id])) {
+        $category = Category::find($id);
+
+        if (!$category) {
             return redirect()->route('manager.categories.index')
-                             ->with('error', 'Catégorie introuvable');
+                ->with('error', 'Catégorie introuvable');
         }
-        $category = $categories[$id];
+
         return view('manager.categories.edit', compact('category'));
     }
+
     // 5. METTRE À JOUR
     public function update(Request $request, $id)
     {
@@ -114,13 +76,31 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
         ]);
+
+        $category = Category::find($id);
+
+        if (!$category) {
+            return redirect()->route('manager.categories.index')
+                ->with('error', 'Catégorie introuvable');
+        }
+
+        $category->update($request->only('name', 'description'));
+        // la couleur n'est pas touchée à la modification
+
         return redirect()->route('manager.categories.index')
-                         ->with('success', 'Catégorie modifiée avec succès (données fictives)');
+            ->with('success', 'Catégorie modifiée avec succès.');
     }
+
     // 6. SUPPRIMER
     public function destroy($id)
     {
+        $category = Category::find($id);
+
+        if ($category) {
+            $category->delete();
+        }
+
         return redirect()->route('manager.categories.index')
-                         ->with('success', 'Catégorie supprimée avec succès (données fictives)');
+            ->with('success', 'Catégorie supprimée avec succès.');
     }
 }

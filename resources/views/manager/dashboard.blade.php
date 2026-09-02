@@ -7,16 +7,9 @@
             <h4 class="page-title">Inventory Manager</h4>
             <p class="page-subtitle">Welcome back, John Doe</p>
         </div>
-        <div class="d-flex align-items-center gap-3">
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" class="form-control" placeholder="Search anything...">
-            </div>
-            <button class="btn btn-outline-secondary">
-                <i class="bi bi-bell"></i>
-            </button>
-        </div>
+        <div class="d-flex align-items-center gap-3"></div>
     </div>
+
     {{-- Cartes de statistiques --}}
     <div class="row g-3 mb-4">
         {{-- Low Stock --}}
@@ -26,7 +19,7 @@
                   🛒 <i class="bi bi-exclamation-triangle"></i>
                 </div>
                 <div>
-                    <h3 class="mb-0 fw-bold">28</h3>
+                    <h3 class="mb-0 fw-bold">{{ $lowStockCount }}</h3>
                     <small class="text-muted">Low Stock Items</small>
                 </div>
             </div>
@@ -38,7 +31,7 @@
                    ⚠️ <i class="bi bi-clock-history"></i>
                 </div>
                 <div>
-                    <h3 class="mb-0 fw-bold">15</h3>
+                    <h3 class="mb-0 fw-bold">{{ $expiringSoonCount }}</h3>
                     <small class="text-muted">Products Expiring Soon</small>
                 </div>
             </div>
@@ -50,7 +43,7 @@
                    🚨 <i class="bi bi-trash"></i>
                 </div>
                 <div>
-                    <h3 class="mb-0 fw-bold">7</h3>
+                    <h3 class="mb-0 fw-bold">{{ $expiredCount }}</h3>
                     <small class="text-muted">Expired Products</small>
                 </div>
             </div>
@@ -62,12 +55,13 @@
                   💰  <i class="bi bi-cash-stack"></i>
                 </div>
                 <div>
-                    <h3 class="mb-0 fw-bold">XAF 620,000</h3>
+                    <h3 class="mb-0 fw-bold">XAF {{ number_format($todaysSales, 0, ',', ' ') }}</h3>
                     <small class="text-muted">Today's Sales</small>
                 </div>
             </div>
         </div>
     </div>
+
     {{-- Quick Actions --}}
     <h5 class="mb-3">Quick Actions</h5>
     <div class="d-flex flex-wrap gap-2 mb-4">
@@ -79,48 +73,33 @@
         <a href="{{ route('manager.reports.inventory') }}" class="btn btn-outline-primary">Inventory Report</a>
         <a href="{{ route('manager.reports.low-stock') }}" class="btn btn-outline-primary">Low Stock report</a>
     </div>
+
     {{-- Tableaux récents --}}
     <div class="row g-4">
         {{-- Recent Stock Inflow --}}
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    Recent Stock Inflow
-                </div>
+                <div class="card-header">Recent Stock Inflow</div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Date & Time</th>
-                                    <th>Products</th>
-                                    <th>Quantity</th>
-                                    <th>Value</th>
+                                    <th>#</th><th>Date & Time</th><th>Products</th><th>Quantity</th><th>Value</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse($recentInflows as $i => $inflow)
                                 <tr>
-                                    <td>1</td>
-                                    <td>08/05/2026</td>
-                                    <td>Rice 50kg</td>
-                                    <td>100</td>
-                                    <td>XAF 200,000</td>
+                                    <td>{{ $i + 1 }}</td>
+                                    <td>{{ $inflow->date_received->format('d/m/Y') }}</td>
+                                    <td>{{ $inflow->product->name ?? '—' }}</td>
+                                    <td>{{ $inflow->quantity }}</td>
+                                    <td>XAF {{ number_format($inflow->total_value, 0, ',', ' ') }}</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>08/05/2026</td>
-                                    <td>Cooking Oil 20L</td>
-                                    <td>50</td>
-                                    <td>XAF 150,000</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>07/05/2026</td>
-                                    <td>Sugar 50kg</td>
-                                    <td>80</td>
-                                    <td>XAF 176,000</td>
-                                </tr>
+                                @empty
+                                <tr><td colspan="5" class="text-center text-muted py-3">Aucune entrée récente.</td></tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -130,47 +109,28 @@
         {{-- Recent Stock Outflow --}}
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    Recent Stock Outflow
-                </div>
+                <div class="card-header">Recent Stock Outflow</div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Date & Time</th>
-                                    <th>Products</th>
-                                    <th>Qty</th>
-                                    <th>Type</th>
-                                    <th>Value</th>
+                                    <th>#</th><th>Date & Time</th><th>Products</th><th>Qty</th><th>Type</th><th>Value</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse($recentOutflows as $i => $out)
                                 <tr>
-                                    <td>1</td>
-                                    <td>08/05/2026</td>
-                                    <td>Rice 50kg</td>
-                                    <td>20</td>
-                                    <td>Sale</td>
-                                    <td>XAF 50,000</td>
+                                    <td>{{ $i + 1 }}</td>
+                                    <td>{{ $out->date->format('d/m/Y') }}</td>
+                                    <td>{{ $out->product->name ?? '—' }}</td>
+                                    <td>{{ $out->quantity }}</td>
+                                    <td>{{ $out->type }}</td>
+                                    <td>XAF {{ number_format($out->total_value, 0, ',', ' ') }}</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>08/05/2026</td>
-                                    <td>Cooking Oil 20L</td>
-                                    <td>10</td>
-                                    <td>Sale</td>
-                                    <td>XAF 35,000</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>07/05/2026</td>
-                                    <td>Sugar 50kg</td>
-                                    <td>5</td>
-                                    <td>Damage</td>
-                                    <td>XAF 11,000</td>
-                                </tr>
+                                @empty
+                                <tr><td colspan="6" class="text-center text-muted py-3">Aucune sortie récente.</td></tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

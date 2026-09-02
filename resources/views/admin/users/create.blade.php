@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', 'Add User | MarketSmart Admin')
 @section('content')
-<div class="admin-table-wrap" style="max-width:560px;">
+<div class="admin-table-wrap" style="max-width:1300px;">
     <h5 class="mb-3">+ Create User</h5>
     @if(session('error'))
         <div class="alert alert-danger py-2">{{ session('error') }}</div>
@@ -30,7 +30,7 @@
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Password (mock)</label>
+            <label class="form-label">Password </label>
             <input type="password" name="password" class="form-control" minlength="6" required>
         </div>
         <div class="d-flex gap-2">

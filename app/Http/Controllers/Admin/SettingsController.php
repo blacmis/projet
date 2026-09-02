@@ -1,7 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+
 class SettingsController extends Controller
 {
     private function defaults(): array
@@ -17,19 +21,19 @@ class SettingsController extends Controller
             'expiry_alert_days' => 7,
         ];
     }
-    private function getSettings(): array
+
+    private function getSettings(): Setting
     {
-        if (!session()->has('admin_settings')) {
-            session(['admin_settings' => $this->defaults()]);
-        }
-        return session('admin_settings');
+        return Setting::firstOrCreate(['id' => 1], $this->defaults());
     }
+
     public function index()
     {
         return view('admin.settings.index', [
-            'settings' => (object) $this->getSettings(),
+            'settings' => $this->getSettings(),
         ]);
     }
+
     public function update(Request $request)
     {
         $request->validate([
@@ -42,7 +46,10 @@ class SettingsController extends Controller
             'low_stock_threshold' => 'nullable|integer|min:0',
             'expiry_alert_days' => 'nullable|integer|min:1|max:90',
         ]);
-        $settings = [
+
+        $settings = $this->getSettings();
+
+        $settings->update([
             'store_name' => $request->store_name,
             'store_address' => $request->store_address ?? '',
             'store_phone' => $request->store_phone ?? '',
@@ -51,18 +58,20 @@ class SettingsController extends Controller
             'receipt_footer' => $request->receipt_footer ?? '',
             'low_stock_threshold' => (int) ($request->low_stock_threshold ?? 20),
             'expiry_alert_days' => (int) ($request->expiry_alert_days ?? 7),
-        ];
-        session(['admin_settings' => $settings]);
-        AuditLogController::log(
-            'SETTINGS_UPDATE',
-            'Store settings updated by admin'
-        );
-        return back()->with('success', 'Paramètres enregistrés (mock).');
+        ]);
+
+        AuditLogController::log('SETTINGS_UPDATE', 'Store settings updated by admin');
+
+        return back()->with('success', 'Paramètres enregistrés.');
     }
+
     public function reset()
     {
-        session(['admin_settings' => $this->defaults()]);
+        $settings = $this->getSettings();
+        $settings->update($this->defaults());
+
         AuditLogController::log('SETTINGS_RESET', 'Store settings reset to defaults');
+
         return back()->with('success', 'Paramètres réinitialisés.');
     }
 }

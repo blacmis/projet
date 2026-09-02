@@ -35,7 +35,7 @@
                     swal.fire({
                         title: 'succes',
                         Text: 'item added',
-                        icon: 'success'
+                        icon: 'success',
                         confirmButtonText: 'continue shopping',
                         timer: 2500 // automatic closs after 2.5seconds
                     });

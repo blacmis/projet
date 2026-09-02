@@ -35,4 +35,8 @@ class Sale extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+    public function registerSession()
+{
+    return $this->belongsTo(CashRegisterSession::class, 'register_session_id');
+}
 }

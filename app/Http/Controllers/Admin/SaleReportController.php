@@ -3,30 +3,39 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use Illuminate\Http\Request;
 
 class SaleReportController extends Controller
 {
     public function index(Request $request)
     {
+        $monthSales = Sale::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year);
+
         $stats = (object) [
-            'total_sales' => 1245,
-            'total_revenue' => 6854000,
-            'total_transactions' => 1156,
-            'items_sold' => 3845,
+            'total_sales' => (clone $monthSales)->where('status', 'completed')->count(),
+            'total_revenue' => (clone $monthSales)->where('status', 'completed')->sum('total'),
+            'total_transactions' => (clone $monthSales)->count(),
+            'items_sold' => SaleItem::whereIn('sale_id', (clone $monthSales)->pluck('id'))->sum('quantity'),
         ];
 
-        $sales = collect([
-            (object) ['date_time' => '30-07-2026 12:00PM', 'receipt_no' => 'RCPT-0048025', 'items' => 4, 'amount' => 11250, 'payment_method' => 'Card'],
-            (object) ['date_time' => '30-07-2026 12:02PM', 'receipt_no' => 'RCPT-0048024', 'items' => 6, 'amount' => 15000, 'payment_method' => 'Cash'],
-            (object) ['date_time' => '30-07-2026 12:05PM', 'receipt_no' => 'RCPT-0048023', 'items' => 2, 'amount' => 3255, 'payment_method' => 'Cash'],
-            (object) ['date_time' => '30-07-2026 12:10PM', 'receipt_no' => 'RCPT-0048022', 'items' => 4, 'amount' => 5200, 'payment_method' => 'Mobile Money'],
-            (object) ['date_time' => '30-07-2026 12:15PM', 'receipt_no' => 'RCPT-0048021', 'items' => 3, 'amount' => 715, 'payment_method' => 'Cash'],
-        ]);
+        $query = Sale::orderByDesc('created_at');
 
         if ($request->filled('payment_method') && $request->payment_method !== 'all') {
-            $sales = $sales->filter(fn ($s) => strtolower($s->payment_method) === strtolower($request->payment_method))->values();
+            $method = strtolower(str_replace(' ', '_', $request->payment_method));
+            $query->where('payment_method', $method);
         }
+
+        $sales = $query->take(50)->get()->map(function (Sale $s) {
+            return (object) [
+                'date_time' => $s->created_at->format('d/m/Y H:i'),
+                'receipt_no' => $s->transaction_number,
+                'items' => $s->items()->sum('quantity'),
+                'amount' => $s->total,
+                'payment_method' => ucwords(str_replace('_', ' ', $s->payment_method)),
+            ];
+        });
 
         return view('admin.sale-report', compact('stats', 'sales'));
     }

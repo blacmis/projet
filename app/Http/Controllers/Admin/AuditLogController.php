@@ -1,40 +1,45 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+
 class AuditLogController extends Controller
 {
     public static function log(string $action, string $details = ''): void
     {
-        $logs = session('admin_audit_log', []);
-        array_unshift($logs, [
-            'id' => count($logs) + 1,
-            'user' => session('auth_user', 'admin'),
-            'action' => $action,
-            'details' => $details,
-            'at' => now()->format('d/m/Y H:i:s'),
-        ]);
-        // garder les 100 dernières
-        session(['admin_audit_log' => array_slice($logs, 0, 100)]);
+        ActivityLog::record('system', $action, $details);
     }
+
     public function index(Request $request)
     {
-        $logs = collect(session('admin_audit_log', []));
+        $query = ActivityLog::orderByDesc('created_at');
+
         if ($request->filled('q')) {
-            $q = strtolower($request->q);
-            $logs = $logs->filter(function ($l) use ($q) {
-                return str_contains(strtolower($l['action']), $q)
-                    || str_contains(strtolower($l['details']), $q)
-                    || str_contains(strtolower($l['user']), $q);
-            })->values();
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('action', 'like', "%{$q}%")
+                    ->orWhere('details', 'like', "%{$q}%")
+                    ->orWhere('user_name', 'like', "%{$q}%");
+            });
         }
-        return view('admin.audit-log.index', [
-            'logs' => $logs,
+
+        $logs = $query->get()->map(fn ($l) => [
+            'at' => $l->created_at->format('d/m/Y H:i:s'),
+            'user' => $l->user_name,
+            'action' => $l->action,
+            'details' => $l->details,
         ]);
+
+        return view('admin.audit-log.index', compact('logs'));
     }
+
     public function clear()
     {
-        session()->forget('admin_audit_log');
+        ActivityLog::truncate();
+
         return back()->with('success', 'Journal vidé.');
     }
 }

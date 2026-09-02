@@ -25,6 +25,9 @@
            class="nav-link {{ request()->routeIs('cashier.payment') ? 'active' : '' }}">
             <span>$</span> Paiement
         </a>
+        <a href="{{ route('cashier.register.open') }}"class="nav-link {{ request()->routeIs('cashier.register.open') ? 'active' : '' }}">
+            <span>🛒</span> Ouverture de Caisse</a>
+        <a href="{{ route('cashier.register.close') }}"class="nav-link {{ request()->routeIs('cashier.register.close') ? 'active' : '' }}"><span>↩</span> Fermeture de Caisse</a>
         <a href="{{ route('cashier.receipt') }}"
            class="nav-link {{ request()->routeIs('cashier.receipt') ? 'active' : '' }}">
             <span>▤</span> Reçu

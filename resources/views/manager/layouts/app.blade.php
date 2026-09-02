@@ -6,6 +6,7 @@
     <title>@yield('title', 'MarketSmart Manager')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ux-enhancements.css') }}">
 </head>
 <body>
 <div class="d-flex">
@@ -85,6 +86,18 @@
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         @yield('content')
     </div>
@@ -92,5 +105,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @stack('scripts')
+<script src="{{ asset('js/ux-enhancements.js') }}"></script>
 </body>
 </html>

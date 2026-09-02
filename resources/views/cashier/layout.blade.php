@@ -7,6 +7,7 @@
     <title>@yield('title', 'MarketSmart Cashier')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/cashier.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ux-enhancements.css') }}">
 </head>
 <body>
 <div class="app">
@@ -30,5 +31,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('js/cashier.js') }}"></script>
 @stack('scripts')
+<script src="{{ asset('js/ux-enhancements.js') }}"></script>
 </body>
 </html>

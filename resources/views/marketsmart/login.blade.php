@@ -138,7 +138,7 @@
                             class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3"
                             style="text-decoration:none;color:#666;border:none;background:transparent;z-index:2;"
                             aria-label="Afficher le mot de passe">
-                        <span id="eyeIcon">👁️</span>
+                        <span id="eyeIcon">(O)</span>
                     </button>
                 </div>
             </div>

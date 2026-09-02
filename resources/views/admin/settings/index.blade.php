@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', 'Settings | MarketSmart Admin')
 @section('content')
-<div class="admin-table-wrap" style="max-width:720px;">
+<div class="admin-table-wrap" style="max-width:1300px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">⚙️ Store Settings</h5>
         <form method="POST" action="{{ route('admin.settings.reset') }}"

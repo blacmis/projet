@@ -3,29 +3,29 @@
 namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Cashier\Concerns\HasFakeCart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class QuickShopController extends Controller
 {
-    use HasFakeCart;
-
     public function quickShop(Request $request)
     {
-        $products = $this->fakeProducts();
-        $categories = $products->pluck('category')->unique()->values();
+        $query = Product::query();
 
         if ($request->filled('search')) {
-            $search = strtolower($request->string('search'));
-            $products = $products->filter(function ($p) use ($search) {
-                return str_contains(strtolower($p->name), $search)
-                    || str_contains(strtolower($p->barcode), $search);
-            })->values();
+            $search = $request->string('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('barcode', 'like', "%{$search}%");
+            });
         }
 
         if ($request->filled('category')) {
-            $products = $products->where('category', $request->category)->values();
+            $query->where('category', $request->category);
         }
+
+        $products = $query->orderBy('name')->get();
+        $categories = Product::whereNotNull('category')->distinct()->pluck('category');
 
         return view('cashier.quick-shop', compact('products', 'categories'));
     }

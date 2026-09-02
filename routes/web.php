@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\InventoryActionController;
 use App\Http\Controllers\Admin\SaleActionController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Cashier\CashRegisterController;
 
 
 
@@ -122,6 +123,8 @@ Route::prefix('manager')
     Route::get('/reports/low-stock', [ReportController::class, 'lowStock'])->name('reports.low-stock');
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
     });
 
 // ROUTES CASHIER
@@ -131,7 +134,11 @@ Route::prefix('cashier')
     ->group(function () {
         // toutes tes routes cashier
         Route::get('/quick-shop', [QuickShopController::class, 'quickShop'])->name('quick-shop');
-
+        Route::get('/dashboard', [QuickShopController::class, 'quickShop'])->name('dashboard');
+    Route::get('/register/open', [CashRegisterController::class, 'openForm'])->name('register.open');
+    Route::post('/register/open', [CashRegisterController::class, 'store'])->name('register.store');
+    Route::get('/register/close', [CashRegisterController::class, 'closeForm'])->name('register.close');
+    Route::post('/register/close', [CashRegisterController::class, 'closeStore'])->name('register.close.store');
     Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::post('/cart/add', [PaymentController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/update', [PaymentController::class, 'updateCart'])->name('cart.update');
@@ -151,6 +158,7 @@ Route::prefix('cashier')
 
     Route::get('/profile', [CashierProfileController::class, 'profile'])->name('profile');
     Route::put('/profile', [CashierProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/photo', [CashierProfileController::class, 'updatePhoto'])->name('profile.photo');
 
     Route::get('/notifications', [CashierNotificationController::class, 'notifications'])->name('notifications');
     Route::post('/notifications/{notification}/read', [CashierNotificationController::class, 'markNotificationRead'])->name('notifications.read');
@@ -173,7 +181,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
-
+    Route::post('/profile/photo', [AdminProfileController::class, 'updatePhoto'])->name('profile.photo');
     Route::get('/search', [AdminSearchController::class, 'index'])->name('search');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -198,6 +206,10 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('role:admin,manager,cashier')
     ->name('logout');
+    Route::get('/login/otp', [AuthController::class, 'showLoginOtp'])->name('login.otp');
+    Route::post('/login/otp', [AuthController::class, 'verifyLoginOtp'])->name('login.otp.verify');
+    Route::post('/login/otp/resend', [AuthController::class, 'resendLoginOtp'])->name('login.otp.resend');
+
 
 
 // dans Route::prefix('admin')->middleware('role:admin')->group(...)

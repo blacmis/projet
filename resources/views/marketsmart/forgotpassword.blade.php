@@ -159,7 +159,7 @@
                     data-target="password_confirmation"
                     style="text-decoration:none;color:#666;border:none;background:transparent;z-index:2;"
                     aria-label="Afficher le mot de passe">
-                <span class="eye-icon">👁️</span>
+                <span class="eye-icon">(O)</span>
             </button>
         </div>
     </div>

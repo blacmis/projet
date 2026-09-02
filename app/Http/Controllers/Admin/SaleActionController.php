@@ -1,143 +1,136 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Admin\AuditLogController;
+
 class SaleActionController extends Controller
 {
-    private function defaultSales(): array
+    private function refreshStatus(Product $product): void
+    {
+        if ($product->stock_quantity <= 0) {
+            $product->status = 'Out of Stock';
+        } elseif ($product->stock_quantity <= ($product->low_stock_threshold ?? 5)) {
+            $product->status = 'Low Stock';
+        } else {
+            $product->status = 'In Stock';
+        }
+        $product->save();
+    }
+
+    private function toArray(Sale $s): array
     {
         return [
-            [
-                'id' => 1,
-                'receipt_no' => 'RCPT-0048025',
-                'date_time' => '30-07-2026 12:00PM',
-                'cashier' => 'Ange Cashier',
-                'amount' => 11250,
-                'payment_method' => 'Card',
-                'items' => 4,
-                'status' => 'Completed',
-            ],
-            [
-                'id' => 2,
-                'receipt_no' => 'RCPT-0048024',
-                'date_time' => '30-07-2026 12:02PM',
-                'cashier' => 'Ange Cashier',
-                'amount' => 15000,
-                'payment_method' => 'Cash',
-                'items' => 6,
-                'status' => 'Completed',
-            ],
-            [
-                'id' => 3,
-                'receipt_no' => 'RCPT-0048023',
-                'date_time' => '30-07-2026 12:05PM',
-                'cashier' => 'Jean Caisse',
-                'amount' => 3255,
-                'payment_method' => 'Cash',
-                'items' => 2,
-                'status' => 'Completed',
-            ],
-            [
-                'id' => 4,
-                'receipt_no' => 'RCPT-0048022',
-                'date_time' => '30-07-2026 12:10PM',
-                'cashier' => 'Ange Cashier',
-                'amount' => 5200,
-                'payment_method' => 'Mobile Money',
-                'items' => 3,
-                'status' => 'Completed',
-            ],
-            [
-                'id' => 5,
-                'receipt_no' => 'RCPT-0048021',
-                'date_time' => '30-07-2026 12:15PM',
-                'cashier' => 'Jean Caisse',
-                'amount' => 715,
-                'payment_method' => 'Cash',
-                'items' => 1,
-                'status' => 'Completed',
-            ],
+            'id' => $s->id,
+            'receipt_no' => $s->transaction_number,
+            'date_time' => $s->created_at->format('d-m-Y h:iA'),
+            'cashier' => $s->cashier_name,
+            'amount' => $s->total,
+            'payment_method' => ucwords(str_replace('_', ' ', $s->payment_method)),
+            'items' => $s->items()->sum('quantity'),
+            'status' => ucfirst($s->status),
         ];
     }
-    private function getSales(): array
-    {
-        if (!session()->has('admin_sales')) {
-            session(['admin_sales' => $this->defaultSales()]);
-        }
-        return session('admin_sales');
-    }
-    private function saveSales(array $sales): void
-    {
-        session(['admin_sales' => array_values($sales)]);
-    }
+
     public function index(Request $request)
     {
-        $sales = collect($this->getSales());
+        $query = Sale::query();
+
         if ($request->filled('q')) {
-            $q = strtolower($request->q);
-            $sales = $sales->filter(function ($s) use ($q) {
-                return str_contains(strtolower($s['receipt_no']), $q)
-                    || str_contains(strtolower($s['cashier']), $q)
-                    || str_contains(strtolower($s['payment_method']), $q);
-            })->values();
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('transaction_number', 'like', "%{$q}%")
+                    ->orWhere('cashier_name', 'like', "%{$q}%")
+                    ->orWhere('payment_method', 'like', "%{$q}%");
+            });
         }
+
         if ($request->filled('status') && $request->status !== 'all') {
-            $sales = $sales->where('status', $request->status)->values();
+            $query->where('status', strtolower($request->status));
         }
+
         if ($request->filled('payment') && $request->payment !== 'all') {
-            $sales = $sales->filter(function ($s) use ($request) {
-                return strtolower($s['payment_method']) === strtolower($request->payment);
-            })->values();
+            $method = strtolower(str_replace(' ', '_', $request->payment));
+            $query->where('payment_method', $method);
         }
-        $all = collect($this->getSales());
-        return view('admin.sale-actions.index', [
-            'sales' => $sales,
-            'stats' => (object) [
-                'total' => $all->count(),
-                'completed' => $all->where('status', 'Completed')->count(),
-                'cancelled' => $all->where('status', 'Cancelled')->count(),
-                'revenue' => $all->where('status', 'Completed')->sum('amount'),
-            ],
-        ]);
+
+        $sales = $query->orderByDesc('created_at')->get()->map(fn (Sale $s) => $this->toArray($s));
+
+        $stats = (object) [
+            'total' => Sale::count(),
+            'completed' => Sale::where('status', 'completed')->count(),
+            'cancelled' => Sale::where('status', 'cancelled')->count(),
+            'revenue' => Sale::where('status', 'completed')->sum('total'),
+        ];
+
+        return view('admin.sale-actions.index', compact('sales', 'stats'));
     }
+
     public function cancel($id)
     {
-        $sales = $this->getSales();
-        $found = false;
-        foreach ($sales as $i => $s) {
-            if ((int) $s['id'] === (int) $id) {
-                if ($s['status'] === 'Cancelled') {
-                    return back()->with('error', 'Cette vente est déjà annulée.');
-                }
-                $sales[$i]['status'] = 'Cancelled';
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
+        $sale = Sale::with('items')->find($id);
+
+        if (!$sale) {
             return back()->with('error', 'Vente introuvable.');
         }
-        $this->saveSales($sales);
-        AuditLogController::log('SALE_CANCEL', 'Sale ID '.$id.' cancelled');
-        return back()->with('success', 'Vente annulée par l\'administrateur.');
+
+        if ($sale->status === 'cancelled') {
+            return back()->with('error', 'Cette vente est déjà annulée.');
+        }
+
+        // Réintègre le stock des produits vendus
+        foreach ($sale->items as $item) {
+            $product = Product::find($item->product_id);
+            if ($product) {
+                $product->stock_quantity += $item->quantity;
+                $product->save();
+                $this->refreshStatus($product);
+            }
+        }
+
+        $sale->status = 'cancelled';
+        $sale->save();
+
+        AuditLogController::log('SALE_CANCEL', "Sale ID {$id} cancelled — stock restored");
+
+        return back()->with('success', 'Vente annulée, stock réintégré.');
     }
+
     public function restore($id)
     {
-        $sales = $this->getSales();
-        $found = false;
-        foreach ($sales as $i => $s) {
-            if ((int) $s['id'] === (int) $id) {
-                $sales[$i]['status'] = 'Completed';
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
+        $sale = Sale::with('items')->find($id);
+
+        if (!$sale) {
             return back()->with('error', 'Vente introuvable.');
         }
-        $this->saveSales($sales);
-        AuditLogController::log('SALE_RESTORE', 'Sale ID '.$id.' restored');
-        return back()->with('success', 'Vente restaurée (Completed).');
+
+        if ($sale->status !== 'cancelled') {
+            return back()->with('error', 'Cette vente n\'est pas annulée.');
+        }
+
+        // Vérifie qu'il y a assez de stock pour re-déduire
+        foreach ($sale->items as $item) {
+            $product = Product::find($item->product_id);
+            if (!$product || $product->stock_quantity < $item->quantity) {
+                return back()->with('error', "Stock insuffisant pour restaurer cette vente ({$item->product_name}).");
+            }
+        }
+
+        foreach ($sale->items as $item) {
+            $product = Product::find($item->product_id);
+            $product->stock_quantity -= $item->quantity;
+            $product->save();
+            $this->refreshStatus($product);
+        }
+
+        $sale->status = 'completed';
+        $sale->save();
+
+        AuditLogController::log('SALE_RESTORE', "Sale ID {$id} restored — stock re-deducted");
+
+        return back()->with('success', 'Vente restaurée (Completed), stock re-déduit.');
     }
 }
