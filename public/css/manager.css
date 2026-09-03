@@ -1,27 +1,40 @@
 /* ---------- Variables de couleurs du fichier css ---------- */
+
 :root {
-    --sidebar-bg: #c47a1a;          /* Couleur principale de la sidebar (brun/or) */
-    --sidebar-hover: #a86512;       /* Couleur au survol */
-    --primary-orange: #f0a500;      /* Boutons principaux (orange) */
+    --sidebar-bg: #c47a1a;
+    --sidebar-hover: #a86512;
+    --primary-orange: #f0a500;
     --primary-orange-hover: #d99400;
     --text-dark: #333333;
     --text-muted: #6c757d;
     --border-color: #e9ecef;
     --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
+
 /* ---------- Reset de base ---------- */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f6fa;
     color: var(--text-dark);
     font-size: 14px;
 }
+
 /* ---------- SIDEBAR ---------- */
+
 .sidebar {
     width: 240px;
     min-height: 100vh;
@@ -35,226 +48,7 @@ body {
     flex-direction: column;
     overflow: hidden;
 }
-.sidebar-logo {
-    padding: 22px 15px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-.sidebar-logo h4 {
-    margin: 0;
-    font-size: 1.35rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-.sidebar-logo small {
-    display: block;
-    font-size: 0.7rem;
-    opacity: 0.85;
-    letter-spacing: 1px;
-    margin-top: 2px;
-}
-.sidebar-nav {
-    flex: 1;
-    padding: 15px 0;
-    overflow-y: auto;
-}
-.sidebar-nav .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 18px;
-    margin: 3px 10px;
-    color: rgba(255, 255, 255, 0.92);
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-}
-.sidebar-nav .nav-link i {
-    font-size: 1.15rem;
-    width: 22px;
-    text-align: center;
-}
-.sidebar-nav .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-}
-.sidebar-nav .nav-link.active {
-    background-color: #ffffff;
-    color: var(--sidebar-bg);
-    font-weight: 600;
-}
-.sidebar-footer {
-    padding: 15px 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-    flex-shrink: 0;
-}
-/* ---------- CONTENU PRINCIPAL ---------- */
-.main-content {
-    margin-left: 260px;
-    min-height: 100vh;
-    padding: 25px 30px;
-}
-/* ---------- TITRES DE PAGE ---------- */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin: 0;
-}
-.page-subtitle {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin: 0;
-}
-/* ---------- CARTES ---------- */
-.card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: var(--card-shadow);
-    background-color: #ffffff;
-}
-.card-header {
-    background-color: #ffffff;
-    border-bottom: 1px solid var(--border-color);
-    padding: 15px 20px;
-    font-weight: 600;
-}
-.card-body {
-    padding: 20px;
-}
-/* Cartes de statistiques (Dashboard) */
-.stat-card {
-    border-radius: 12px;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: var(--card-shadow);
-    transition: transform 0.2s ease;
-}
-.stat-card:hover {
-    transform: translateY(-3px);
-}
-.stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-}
-/* ---------- TABLEAUX ---------- */
-.table {
-    margin-bottom: 0;
-}
-.table thead th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    color: #555;
-    border-bottom: 1px solid var(--border-color);
-    padding: 12px 15px;
-}
-.table tbody td {
-    padding: 12px 15px;
-    vertical-align: middle;
-    border-bottom: 1px solid #f1f1f1;
-}
-.table tbody tr:hover {
-    background-color: #fafafa;
-}
-/* ---------- BOUTONS ---------- */
-.btn-orange {
-    background-color: var(--primary-orange);
-    border-color: var(--primary-orange);
-    color: #ffffff;
-    font-weight: 500;
-    padding: 8px 18px;
-    border-radius: 8px;
-}
-.btn-orange:hover {
-    background-color: var(--primary-orange-hover);
-    border-color: var(--primary-orange-hover);
-    color: #ffffff;
-}
-.btn-outline-orange {
-    border: 1px solid var(--primary-orange);
-    color: var(--primary-orange);
-    background: transparent;
-}
-.btn-outline-orange:hover {
-    background-color: var(--primary-orange);
-    color: #ffffff;
-}
-/* ---------- BADGES / STATUTS ---------- */
-.badge-status {
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 5px 12px;
-    border-radius: 20px;
-}
-/* ---------- RECHERCHE ---------- */
-.search-box {
-    max-width: 320px;
-    position: relative;
-}
-.search-box input {
-    padding-left: 38px;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
-.search-box i {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #adb5bd;
-}
-/* ---------- PAGINATION ---------- */
-.pagination .page-link {
-    border-radius: 6px;
-    margin: 0 2px;
-    color: #555;
-}
-.pagination .page-item.active .page-link {
-    background-color: var(--primary-orange);
-    border-color: var(--primary-orange);
-}
-/* ---------- MODAL (pour plus tard) ---------- */
-.modal-header {
-    border-bottom: 1px solid var(--border-color);
-}
-.modal-footer {
-    border-top: 1px solid var(--border-color);
-}
-/* ---------- RESPONSIVE (petit écran) ---------- */
-@media (max-width: 992px) {
-    .sidebar {
-        width: 70px;
-    }
-    .sidebar-logo h4,
-    .sidebar-logo small,
-    .sidebar-nav .nav-link span {
-        display: none;
-    }
-    .sidebar-nav .nav-link {
-        justify-content: center;
-        padding: 14px 0;
-    }
-    .main-content {
-        margin-left: 70px;
-    }
-}
 
-/* ===== Logo unifié MarketSmart ===== */
 .sidebar-logo {
     padding: 18px 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -267,6 +61,21 @@ body {
     gap: 12px;
     text-decoration: none;
     color: #fff;
+}
+
+.sidebar-logo h4 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-logo small {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.85;
+    letter-spacing: 1px;
+    margin-top: 2px;
 }
 
 .sidebar-logo .logo-circle {
@@ -304,4 +113,946 @@ body {
     color: rgba(255,255,255,.85);
     text-transform: uppercase;
     margin-top: 2px;
+}
+
+/* Navigation */
+
+.sidebar-nav {
+    flex: 1;
+    padding: 15px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: calc(100% - 20px);
+    height: 64px;
+    min-height: 64px;
+
+    padding: 0 18px;
+    margin: 8px 10px;
+
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.92);
+
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 400;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        font-weight .2s ease;
+}
+
+.sidebar-nav .nav-link i,
+.sidebar-nav .nav-link span {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.15rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+    background-color: #fff;
+    color: var(--sidebar-bg);
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    padding: 15px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+}
+
+/* ---------- CONTENU PRINCIPAL ---------- */
+
+.main-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    padding: 25px 30px;
+    min-width: 0;
+}
+
+/* ---------- TITRES DE PAGE ---------- */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+    min-width: 0;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.page-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- CARTES ---------- */
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    background-color: #ffffff;
+    min-width: 0;
+}
+
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* ---------- CARTES DE STATISTIQUES ---------- */
+
+.stat-card {
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease;
+    min-width: 0;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+/* ---------- TABLEAUX ---------- */
+
+.table {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #555;
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 15px;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+/* Bootstrap table responsive */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ---------- BOUTONS ---------- */
+
+.btn-orange {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+    color: #ffffff;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+}
+
+.btn-orange:hover {
+    background-color: var(--primary-orange-hover);
+    border-color: var(--primary-orange-hover);
+    color: #ffffff;
+}
+
+.btn-outline-orange {
+    border: 1px solid var(--primary-orange);
+    color: var(--primary-orange);
+    background: transparent;
+}
+
+.btn-outline-orange:hover {
+    background-color: var(--primary-orange);
+    color: #ffffff;
+}
+
+/* ---------- BADGES / STATUTS ---------- */
+
+.badge-status {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+/* ---------- RECHERCHE ---------- */
+
+.search-box {
+    max-width: 320px;
+    position: relative;
+}
+
+.search-box input {
+    padding-left: 38px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    max-width: 100%;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}
+
+/* ---------- PAGINATION ---------- */
+
+.pagination .page-link {
+    border-radius: 6px;
+    margin: 0 2px;
+    color: #555;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+/* ---------- MODAL ---------- */
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* =========================================================
+   RESPONSIVE SAFETY
+   ========================================================= */
+
+.main-content,
+.sidebar,
+.sidebar-nav,
+.card,
+.card-body,
+.card-header {
+    min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+.form-control,
+.form-select,
+textarea,
+input,
+select,
+button {
+    max-width: 100%;
+}
+
+/* =========================================================
+   TABLETTE
+   ========================================================= */
+
+@media (max-width: 1100px) and (min-width: 821px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main-content {
+        margin-left: 220px;
+        padding: 22px 20px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 820px) {
+
+    body > .d-flex {
+        display: block !important;
+        width: 100%;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: 0;
+        height: auto;
+        overflow: visible;
+        display: block;
+    }
+
+    .sidebar-logo {
+        padding: 12px 14px;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        padding: 8px 0;
+        overflow: visible;
+    }
+
+    .sidebar-nav .nav-link {
+        width: calc(50% - 20px);
+        min-height: 48px;
+        height: auto;
+        margin: 5px 10px;
+        padding: 9px 12px;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .sidebar-footer {
+        display: none;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 18px 16px 28px;
+        min-height: 0;
+    }
+
+    .main-content > header {
+        margin: -18px -16px 18px !important;
+        padding: 12px 16px !important;
+        min-height: 64px;
+        gap: 12px;
+        flex-wrap: wrap;
+        min-width: 0;
+    }
+
+    .main-content > header > div:first-child {
+        min-width: 0;
+    }
+
+    .main-content > header .dropdown {
+        flex-shrink: 0;
+        max-width: 100%;
+    }
+
+    .page-header {
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .page-title {
+        font-size: 1.3rem;
+    }
+
+    .card-header,
+    .card-body {
+        padding: 14px;
+    }
+
+    .search-box {
+        max-width: none;
+        width: 100%;
+    }
+
+    .table-responsive > .table {
+        min-width: 680px;
+    }
+}
+
+/* =========================================================
+   PETIT MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+    .sidebar-logo a {
+        gap: 9px;
+    }
+
+    .sidebar-logo .logo-circle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .sidebar-logo .brand-name {
+        font-size: 1.05rem;
+    }
+
+    .sidebar-logo .brand-sub {
+        font-size: .58rem;
+        letter-spacing: 1.5px;
+    }
+
+    .sidebar-nav .nav-link {
+        width: calc(100% - 20px);
+    }
+
+    .main-content {
+        padding: 14px 10px 24px;
+    }
+
+    .main-content > header {
+        margin: -14px -10px 14px !important;
+        padding: 10px !important;
+    }
+
+    .main-content > header .dropdown,
+    .main-content > header .dropdown > button {
+        max-width: 100%;
+    }
+
+    .page-title {
+        font-size: 1.15rem;
+    }
+
+    .table-responsive > .table {
+        min-width: 620px;
+    }
+
+    .btn-orange,
+    .btn-outline-orange {
+        max-width: 100%;
+    }
+
+    .card-body {
+        padding: 12px;
+    }
+}
+
+/* =========================================================
+   TRÈS PETIT MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .main-content {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .main-content > header {
+        margin-left: -8px !important;
+        margin-right: -8px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .sidebar-nav .nav-link {
+        font-size: .88rem;
+    }
+    /* =========================================================
+   MARKETSMART - RESPONSIVE HARDENING V2
+   MOBILE / TABLET / PORTRAIT / LANDSCAPE
+   ========================================================= */
+
+/* Protection générale contre les débordements */
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.main-content {
+    min-width: 0;
+    width: calc(100% - 260px);
+}
+
+/* La sidebar ne doit jamais couper son contenu */
+.sidebar {
+    overflow: hidden;
+}
+
+.sidebar-nav {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sidebar-nav .nav-link {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   TABLETTES + TELEPHONES
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    /*
+     * Le layout Manager utilise un .d-flex Bootstrap.
+     * Sur mobile, on empile sidebar + contenu verticalement.
+     */
+    body > .d-flex {
+        flex-direction: column !important;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /*
+     * SIDEBAR MOBILE
+     *
+     * Elle reste en haut de la page.
+     * La navigation possède sa propre zone de défilement.
+     */
+    .sidebar {
+        position: sticky;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+        min-height: 0;
+
+        max-height: 46vh;
+
+        z-index: 1100;
+
+        overflow: hidden;
+    }
+
+    /* Logo */
+    .sidebar-logo {
+        flex: 0 0 auto;
+        padding: 10px 14px;
+        text-align: left;
+    }
+
+    .sidebar-logo a {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .sidebar-logo .brand-name {
+        display: block !important;
+    }
+
+    .sidebar-logo .brand-sub {
+        display: block !important;
+    }
+
+    /* Zone réellement scrollable */
+    .sidebar-nav {
+        width: 100%;
+        max-height: calc(46vh - 66px);
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        padding: 8px 8px 12px;
+
+        display: block;
+    }
+
+    /*
+     * Tous les liens restent visibles et accessibles.
+     * Aucun texte n'est masqué.
+     */
+    .sidebar-nav .nav-link {
+        width: 100%;
+        min-height: 46px;
+        height: auto;
+
+        margin: 3px 0;
+
+        padding: 11px 13px;
+
+        display: flex;
+        align-items: center;
+
+        justify-content: flex-start;
+
+        white-space: normal;
+        overflow-wrap: anywhere;
+
+        line-height: 1.25;
+
+        font-size: 0.9rem;
+    }
+
+    /* Annule l'ancien comportement qui masquait les éléments */
+    .sidebar-nav .nav-link span,
+    .sidebar-nav .nav-link i {
+        display: inline-flex !important;
+    }
+
+
+    /* =====================================================
+       CONTENU PRINCIPAL
+       ===================================================== */
+
+    .main-content {
+        width: 100%;
+        max-width: 100%;
+
+        margin-left: 0;
+
+        padding: 14px 16px 28px;
+
+        min-width: 0;
+    }
+
+    /*
+     * Header Manager.
+     * L'ancien margin négatif pouvait provoquer des débordements.
+     */
+    .main-content > header {
+        margin: -14px -16px 18px !important;
+
+        padding: 12px 16px !important;
+
+        min-height: 60px;
+
+        gap: 10px;
+
+        flex-wrap: wrap;
+    }
+
+    .main-content > header > div:first-child {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .main-content > header .dropdown {
+        flex: 0 0 auto;
+    }
+
+
+    /* =====================================================
+       TITRES
+       ===================================================== */
+
+    .page-header {
+        align-items: flex-start;
+
+        gap: 12px;
+
+        flex-wrap: wrap;
+    }
+
+    .page-title {
+        min-width: 0;
+
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       CARTES
+       ===================================================== */
+
+    .card,
+    .stat-card {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+
+    /* =====================================================
+       TABLEAUX
+       ===================================================== */
+
+    .table-responsive {
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-responsive table {
+        min-width: 650px;
+    }
+
+
+    /* =====================================================
+       MODALES
+       ===================================================== */
+
+    .modal-dialog {
+        width: auto;
+
+        max-width: calc(100% - 24px);
+
+        margin: 12px auto;
+    }
+}
+
+
+/* =========================================================
+   TELEPHONES VERTICAUX
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .sidebar {
+        max-height: 48vh;
+    }
+
+    .sidebar-nav {
+        max-height: calc(48vh - 64px);
+    }
+
+
+    /* Logo plus compact */
+    .sidebar-logo {
+        padding: 9px 12px;
+    }
+
+    .sidebar-logo .logo-circle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .sidebar-logo .logo-circle svg {
+        width: 21px;
+        height: 21px;
+    }
+
+    .sidebar-logo .brand-name {
+        font-size: 1rem;
+    }
+
+    .sidebar-logo .brand-sub {
+        font-size: 0.6rem;
+    }
+
+
+    /* Liens de navigation */
+    .sidebar-nav .nav-link {
+        min-height: 44px;
+
+        padding: 10px 12px;
+
+        font-size: 0.87rem;
+    }
+
+
+    /* Contenu */
+    .main-content {
+        padding: 12px 12px 24px;
+    }
+
+    .main-content > header {
+        margin: -12px -12px 16px !important;
+
+        padding: 10px 12px !important;
+    }
+
+
+    /* Titres */
+    .page-title {
+        font-size: 1.15rem;
+    }
+
+    .page-header .page-title {
+        font-size: 1.2rem;
+    }
+
+
+    /* Cards */
+    .card-header,
+    .card-body {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+
+    /* Empêche les débordements Bootstrap */
+    .row {
+        --bs-gutter-x: 1rem;
+
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .row > * {
+        min-width: 0;
+    }
+
+
+    /* =====================================================
+       PROFIL MANAGER
+       ===================================================== */
+
+    .msprofile-wrap {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .msprofile-card {
+        width: 100%;
+        max-width: 100%;
+
+        padding: 16px;
+    }
+
+    .msprofile-top {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+    }
+
+    .msprofile-avatar-wrap {
+        width: 100%;
+    }
+
+    /*
+     * Très important :
+     * le Blade contient min-width:250px.
+     * !important permet de neutraliser cette contrainte
+     * uniquement sur petit écran.
+     */
+    .msprofile-info {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    /*
+     * Au lieu de garder 150px pour le label,
+     * label et valeur passent proprement l'un sous l'autre.
+     */
+    .msprofile-row {
+        display: grid;
+
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 3px;
+
+        overflow-wrap: anywhere;
+    }
+
+    .msprofile-row .label {
+        width: auto;
+
+        font-size: 0.8rem;
+    }
+
+    .msprofile-row .value {
+        min-width: 0;
+
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .msprofile-stats {
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .msprofile-stats > div {
+        padding: 8px 0;
+    }
+
+
+    /* Formulaires */
+    .form-control,
+    .form-select,
+    .btn {
+        max-width: 100%;
+    }
+}
+
+
+/* =========================================================
+   TELEPHONES HORIZONTAUX COURTS
+   ========================================================= */
+
+@media (max-width: 992px)
+       and (orientation: landscape)
+       and (max-height: 520px) {
+
+    .sidebar {
+        max-height: 62vh;
+    }
+
+    .sidebar-nav {
+        max-height: calc(62vh - 62px);
+    }
+
+    .sidebar-nav .nav-link {
+        min-height: 42px;
+
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+}
 }
