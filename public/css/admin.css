@@ -8,6 +8,13 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     font-family: 'Segoe UI', system-ui, sans-serif;
@@ -15,7 +22,10 @@ body {
     color: #212529;
 }
 
-/* Sidebar */
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 .admin-sidebar {
     position: fixed;
     top: 0;
@@ -25,174 +35,11 @@ body {
     background: var(--admin-orange);
     color: #fff;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1000;
     padding: 16px 0;
 }
 
-.admin-sidebar .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 20px 24px;
-    font-weight: 700;
-    font-size: 1.1rem;
-}
-
-.admin-sidebar .brand img,
-.admin-sidebar .brand .logo-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.admin-sidebar .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    color: rgba(255,255,255,0.9);
-    text-decoration: none;
-    font-size: 0.95rem;
-    border-left: 4px solid transparent;
-    transition: background 0.15s;
-}
-
-.admin-sidebar .nav-link:hover,
-.admin-sidebar .nav-link.active {
-    background: rgba(0,0,0,0.15);
-    color: #fff;
-    border-left-color: #fff;
-}
-
-/* Main */
-.admin-main {
-    margin-left: var(--sidebar-width);
-    min-height: 100vh;
-}
-
-.admin-header {
-    background: #fff;
-    padding: 14px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.admin-header .welcome {
-    font-size: 1.15rem;
-    font-weight: 500;
-}
-
-.admin-header .search-box {
-    display: flex;
-    align-items: center;
-    background: #f1f3f5;
-    border-radius: 24px;
-    padding: 8px 16px;
-    min-width: 260px;
-}
-
-.admin-header .search-box input {
-    border: none;
-    background: transparent;
-    outline: none;
-    width: 100%;
-    font-size: 0.9rem;
-}
-
-.admin-content {
-    padding: 24px 28px;
-}
-
-/* Cards stats */
-.stat-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    height: 100%;
-}
-
-.stat-card .stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    margin-bottom: 12px;
-}
-
-.stat-card .stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.stat-card .stat-label {
-    color: #6c757d;
-    font-size: 0.875rem;
-    margin: 0;
-}
-
-.stat-card .stat-sub {
-    font-size: 0.8rem;
-    margin-top: 4px;
-}
-
-.stat-sub.up { color: #198754; }
-.stat-sub.down { color: #dc3545; }
-.stat-sub.warn { color: #e67e22; }
-.stat-sub.danger { color: #dc3545; }
-
-/* Tables */
-.admin-table-wrap {
-    background: #fff;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
-
-.admin-table-wrap table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.admin-table-wrap th {
-    text-align: left;
-    padding: 10px 12px;
-    font-size: 0.8rem;
-    color: #6c757d;
-    border-bottom: 1px solid #e9ecef;
-    font-weight: 600;
-}
-
-.admin-table-wrap td {
-    padding: 12px;
-    border-bottom: 1px solid #f1f3f5;
-    font-size: 0.9rem;
-}
-
-.badge-status {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.badge-good { background: #d1e7dd; color: #0f5132; }
-.badge-low { background: #fff3cd; color: #664d03; }
-.badge-out { background: #f8d7da; color: #842029; }
-.badge-done { background: #d1e7dd; color: #0f5132; }
-
-/* ===== Logo unifié MarketSmart ===== */
 .admin-sidebar .brand {
     display: flex;
     align-items: center;
@@ -202,6 +49,7 @@ body {
     color: #fff;
 }
 
+.admin-sidebar .brand img,
 .admin-sidebar .brand .logo-circle {
     width: 44px;
     height: 44px;
@@ -237,4 +85,831 @@ body {
     color: rgba(255,255,255,.85);
     text-transform: uppercase;
     margin-top: 2px;
+}
+
+/* Navigation */
+
+.admin-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: calc(100% - 20px);
+    height: 64px;
+    min-height: 64px;
+
+    padding: 0 16px;
+    margin: 8px 10px;
+
+    background-color: transparent;
+    color: rgba(255,255,255,.92);
+
+    text-decoration: none;
+    font-size: .95rem;
+    font-weight: 400;
+
+    border-left: 4px solid transparent;
+    border-radius: 8px;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        border-left-color .2s ease;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+    background-color: #fff;
+    color: var(--admin-orange);
+    font-weight: 600;
+    border-left-color: var(--admin-orange);
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.admin-main {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    min-width: 0;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-header {
+    background: #fff;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #e9ecef;
+    min-width: 0;
+}
+
+.admin-header .welcome {
+    font-size: 1.15rem;
+    font-weight: 500;
+    min-width: 0;
+}
+
+.admin-header .search-box {
+    display: flex;
+    align-items: center;
+    background: #f1f3f5;
+    border-radius: 24px;
+    padding: 8px 16px;
+    min-width: 260px;
+    flex: 1 1 260px;
+    max-width: 420px;
+}
+
+.admin-header .search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    min-width: 0;
+    font-size: 0.9rem;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.admin-content {
+    padding: 24px 28px;
+    min-width: 0;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    height: 100%;
+    min-width: 0;
+}
+
+.stat-card .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.stat-card .stat-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.stat-card .stat-sub {
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.stat-sub.up {
+    color: #198754;
+}
+
+.stat-sub.down {
+    color: #dc3545;
+}
+
+.stat-sub.warn {
+    color: #e67e22;
+}
+
+.stat-sub.danger {
+    color: #dc3545;
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.admin-table-wrap {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-table-wrap table {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: collapse;
+}
+
+.admin-table-wrap th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-table-wrap td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: 0.9rem;
+}
+
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-good {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-low {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.badge-out {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.badge-done {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+/* =========================================================
+   GLOBAL RESPONSIVE SAFETY
+   ========================================================= */
+
+.admin-main,
+.admin-content,
+.admin-header,
+.admin-sidebar,
+.admin-table-wrap,
+.admin-header > div {
+    min-width: 0;
+}
+
+.admin-header > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.admin-header input,
+.admin-content input,
+.admin-content select,
+.admin-content textarea,
+.admin-content button {
+    max-width: 100%;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+/* =========================================================
+   TABLETTE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    :root {
+        --sidebar-width: 220px;
+    }
+
+    .admin-content {
+        padding: 22px 20px;
+    }
+
+    .admin-header {
+        padding: 12px 20px;
+    }
+
+    .admin-header .search-box {
+        min-width: 190px;
+    }
+
+    .admin-table-wrap {
+        padding: 16px;
+    }
+}
+
+/* =========================================================
+   MOBILE / TABLETTE PETITE
+   ========================================================= */
+
+@media (max-width: 820px) {
+
+    .admin-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow: visible;
+        padding: 10px 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    .admin-sidebar .brand {
+        width: 100%;
+        padding: 10px 16px 14px;
+    }
+
+    .admin-sidebar .nav-link {
+        width: calc(50% - 20px);
+        min-height: 48px;
+        height: auto;
+        margin: 5px 10px;
+        padding: 10px 12px;
+        border-left: 0;
+        border-radius: 8px;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .admin-sidebar .nav-link:hover,
+    .admin-sidebar .nav-link.active {
+        border-left: 0;
+    }
+
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+        min-height: 0;
+    }
+
+    .admin-header {
+        min-height: 68px;
+        flex-wrap: wrap;
+        padding: 12px 16px;
+        gap: 10px;
+    }
+
+    .admin-header .welcome {
+        flex: 1 1 100%;
+    }
+
+    .admin-header > div:last-child {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .admin-header .search-box {
+        flex: 1 1 220px;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .admin-content {
+        padding: 18px 16px 28px;
+    }
+
+    .admin-table-wrap {
+        padding: 14px;
+        border-radius: 10px;
+    }
+}
+
+/* =========================================================
+   PETIT MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+    .admin-sidebar .nav-link {
+        width: calc(100% - 20px);
+    }
+
+    .admin-sidebar .brand .brand-name {
+        font-size: 1.05rem;
+    }
+
+    .admin-sidebar .brand .brand-sub {
+        font-size: .6rem;
+        letter-spacing: 1.5px;
+    }
+
+    .admin-header {
+        padding: 10px 12px;
+    }
+
+    .admin-header .welcome {
+        font-size: 1rem;
+    }
+
+    .admin-header > div:last-child {
+        align-items: stretch;
+    }
+
+    .admin-header .search-box {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .admin-content {
+        padding: 14px 10px 24px;
+    }
+
+    .admin-table-wrap {
+        padding: 10px;
+        border-radius: 9px;
+    }
+
+    .admin-table-wrap table {
+        min-width: 620px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+}
+
+/* =========================================================
+   TRÈS PETIT MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .admin-content {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .admin-sidebar .nav-link {
+        font-size: .88rem;
+    }
+
+    .admin-table-wrap {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    /* =========================================================
+   MARKETSMART ADMIN - RESPONSIVE HARDENING V2
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.admin-main {
+    min-width: 0;
+
+    width: calc(100% - var(--sidebar-width));
+}
+
+.admin-content {
+    min-width: 0;
+}
+
+.admin-sidebar {
+    scrollbar-width: thin;
+
+    overscroll-behavior: contain;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-sidebar .nav-link {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   TABLETTE + MOBILE
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    /*
+     * Sidebar Admin complète et scrollable.
+     * On ne masque plus les fonctionnalités.
+     */
+    .admin-sidebar {
+        position: sticky;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: auto;
+        min-height: 0;
+
+        max-height: 46vh;
+
+        padding: 8px 0 10px;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        z-index: 1100;
+    }
+
+
+    /* Logo */
+    .admin-sidebar .brand {
+        padding: 8px 14px 10px;
+    }
+
+    .admin-sidebar .brand .logo-circle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .admin-sidebar .brand .brand-name,
+    .admin-sidebar .brand .brand-sub {
+        display: block !important;
+    }
+
+
+    /* Navigation */
+    .admin-sidebar .nav-link {
+        width: calc(100% - 20px);
+
+        min-height: 44px;
+        height: auto;
+
+        margin: 3px 10px;
+
+        padding: 10px 13px;
+
+        white-space: normal;
+
+        overflow-wrap: anywhere;
+
+        line-height: 1.25;
+
+        border-left: 4px solid transparent;
+    }
+
+
+    /* Contenu */
+    .admin-main {
+        width: 100%;
+
+        margin-left: 0;
+
+        min-width: 0;
+    }
+
+
+    /* Header */
+    .admin-header {
+        padding: 12px 16px;
+
+        flex-wrap: wrap;
+
+        gap: 12px;
+    }
+
+    .admin-header > div:first-child {
+        flex: 1 1 160px;
+
+        min-width: 0;
+    }
+
+    .admin-header > div:last-child {
+        flex: 1 1 100%;
+
+        min-width: 0;
+
+        justify-content: flex-end;
+
+        flex-wrap: wrap;
+    }
+
+
+    /* Recherche */
+    .admin-header .search-box {
+        min-width: 0;
+
+        width: min(100%, 360px);
+
+        max-width: 100%;
+    }
+
+
+    /* Contenu */
+    .admin-content {
+        padding: 16px;
+    }
+
+
+    /* Tables */
+    .admin-table-wrap {
+        min-width: 0;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-table-wrap table {
+        min-width: 700px;
+    }
+
+
+    .stat-card {
+        min-width: 0;
+    }
+}
+
+
+/* =========================================================
+   TELEPHONE VERTICAL
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .admin-sidebar {
+        max-height: 48vh;
+    }
+
+    .admin-sidebar .brand {
+        padding: 7px 12px 9px;
+    }
+
+    .admin-sidebar .brand .logo-circle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .admin-sidebar .brand .logo-circle svg {
+        width: 21px;
+        height: 21px;
+    }
+
+    .admin-sidebar .brand .brand-name {
+        font-size: 1rem;
+    }
+
+    .admin-sidebar .brand .brand-sub {
+        font-size: 0.6rem;
+    }
+
+
+    .admin-sidebar .nav-link {
+        min-height: 43px;
+
+        padding: 9px 12px;
+
+        font-size: 0.87rem;
+    }
+
+
+    /* Header */
+    .admin-header {
+        padding: 10px 12px;
+
+        align-items: center;
+    }
+
+    .admin-header .welcome {
+        font-size: 1rem;
+    }
+
+
+    /* Header mobile */
+    .admin-header > div:last-child {
+        justify-content: space-between;
+
+        gap: 8px;
+    }
+
+
+    /* Search */
+    .admin-header .search-box {
+        flex: 1 1 100%;
+
+        width: 100%;
+
+        order: 1;
+    }
+
+
+    .admin-header > div:last-child > a {
+        order: 2;
+    }
+
+    .admin-header > div:last-child > .dropdown {
+        order: 3;
+    }
+
+
+    /* Content */
+    .admin-content {
+        padding: 12px;
+    }
+
+
+    /* Bootstrap rows */
+    .admin-content .row {
+        --bs-gutter-x: 1rem;
+
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .admin-content .row > * {
+        min-width: 0;
+    }
+
+
+    /* Tables / cards */
+    .admin-table-wrap {
+        padding: 12px;
+
+        border-radius: 12px;
+    }
+
+
+    .admin-table-wrap > form {
+        align-items: stretch;
+    }
+
+    .admin-table-wrap > form input,
+    .admin-table-wrap > form select,
+    .admin-table-wrap > form button {
+        max-width: 100%;
+    }
+
+
+    /* Formulaires d'action */
+    .admin-table-wrap td form {
+        flex-wrap: wrap;
+    }
+
+
+    /* =====================================================
+       PROFIL ADMIN
+       ===================================================== */
+
+    .msprofile-wrap {
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+    .msprofile-card {
+        width: 100%;
+
+        padding: 16px;
+    }
+
+    .msprofile-top {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+    }
+
+    .msprofile-avatar-wrap {
+        width: 100%;
+    }
+
+    .msprofile-info {
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        max-width: 100% !important;
+    }
+
+    .msprofile-row {
+        display: grid;
+
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 3px;
+
+        overflow-wrap: anywhere;
+    }
+
+    .msprofile-row .label {
+        width: auto;
+    }
+
+    .msprofile-row .value {
+        min-width: 0;
+
+        overflow-wrap: anywhere;
+
+        word-break: break-word;
+    }
+
+    .msprofile-stats {
+        flex-direction: column;
+
+        gap: 12px;
+    }
+}
+
+
+/* =========================================================
+   LANDSCAPE COURT
+   ========================================================= */
+
+@media (max-width: 992px)
+       and (orientation: landscape)
+       and (max-height: 520px) {
+
+    .admin-sidebar {
+        max-height: 62vh;
+    }
+
+    .admin-sidebar .nav-link {
+        min-height: 40px;
+
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+}
 }
