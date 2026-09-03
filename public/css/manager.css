@@ -1,0 +1,307 @@
+/* ---------- Variables de couleurs du fichier css ---------- */
+:root {
+    --sidebar-bg: #c47a1a;          /* Couleur principale de la sidebar (brun/or) */
+    --sidebar-hover: #a86512;       /* Couleur au survol */
+    --primary-orange: #f0a500;      /* Boutons principaux (orange) */
+    --primary-orange-hover: #d99400;
+    --text-dark: #333333;
+    --text-muted: #6c757d;
+    --border-color: #e9ecef;
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+/* ---------- Reset de base ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
+    color: var(--text-dark);
+    font-size: 14px;
+}
+/* ---------- SIDEBAR ---------- */
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background-color: var(--sidebar-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.sidebar-logo {
+    padding: 22px 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+.sidebar-logo h4 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.sidebar-logo small {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.85;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+.sidebar-nav {
+    flex: 1;
+    padding: 15px 0;
+    overflow-y: auto;
+}
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 18px;
+    margin: 3px 10px;
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+.sidebar-nav .nav-link i {
+    font-size: 1.15rem;
+    width: 22px;
+    text-align: center;
+}
+.sidebar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+.sidebar-nav .nav-link.active {
+    background-color: #ffffff;
+    color: var(--sidebar-bg);
+    font-weight: 600;
+}
+.sidebar-footer {
+    padding: 15px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+}
+/* ---------- CONTENU PRINCIPAL ---------- */
+.main-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    padding: 25px 30px;
+}
+/* ---------- TITRES DE PAGE ---------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+}
+.page-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+/* ---------- CARTES ---------- */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    background-color: #ffffff;
+}
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    font-weight: 600;
+}
+.card-body {
+    padding: 20px;
+}
+/* Cartes de statistiques (Dashboard) */
+.stat-card {
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+/* ---------- TABLEAUX ---------- */
+.table {
+    margin-bottom: 0;
+}
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #555;
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 15px;
+}
+.table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f1f1;
+}
+.table tbody tr:hover {
+    background-color: #fafafa;
+}
+/* ---------- BOUTONS ---------- */
+.btn-orange {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+    color: #ffffff;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+}
+.btn-orange:hover {
+    background-color: var(--primary-orange-hover);
+    border-color: var(--primary-orange-hover);
+    color: #ffffff;
+}
+.btn-outline-orange {
+    border: 1px solid var(--primary-orange);
+    color: var(--primary-orange);
+    background: transparent;
+}
+.btn-outline-orange:hover {
+    background-color: var(--primary-orange);
+    color: #ffffff;
+}
+/* ---------- BADGES / STATUTS ---------- */
+.badge-status {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+/* ---------- RECHERCHE ---------- */
+.search-box {
+    max-width: 320px;
+    position: relative;
+}
+.search-box input {
+    padding-left: 38px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}
+/* ---------- PAGINATION ---------- */
+.pagination .page-link {
+    border-radius: 6px;
+    margin: 0 2px;
+    color: #555;
+}
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+/* ---------- MODAL (pour plus tard) ---------- */
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+/* ---------- RESPONSIVE (petit écran) ---------- */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 70px;
+    }
+    .sidebar-logo h4,
+    .sidebar-logo small,
+    .sidebar-nav .nav-link span {
+        display: none;
+    }
+    .sidebar-nav .nav-link {
+        justify-content: center;
+        padding: 14px 0;
+    }
+    .main-content {
+        margin-left: 70px;
+    }
+}
+
+/* ===== Logo unifié MarketSmart ===== */
+.sidebar-logo {
+    padding: 18px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: left;
+}
+
+.sidebar-logo a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.sidebar-logo .logo-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+.sidebar-logo .logo-circle svg {
+    width: 24px;
+    height: 24px;
+}
+
+.sidebar-logo .brand-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #fff;
+}
+
+.sidebar-logo .brand-name span {
+    color: #fbbf24;
+}
+
+.sidebar-logo .brand-sub {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,.85);
+    text-transform: uppercase;
+    margin-top: 2px;
+}
