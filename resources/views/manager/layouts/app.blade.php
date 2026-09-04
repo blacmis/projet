@@ -10,6 +10,23 @@
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 </head>
 <body>
+
+{{-- Bouton menu mobile --}}
+<button
+    type="button"
+    class="mobile-menu-toggle"
+    aria-label="Ouvrir le menu"
+    aria-expanded="false"
+    data-mobile-menu-toggle
+>
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+{{-- Fond sombre derrière le menu --}}
+<div class="mobile-menu-backdrop" data-mobile-menu-backdrop></div>
+
 <div class="d-flex">
     {{-- SIDEBAR --}}
     <aside class="sidebar">
@@ -48,7 +65,7 @@
     {{-- MAIN --}}
     <div class="main-content flex-grow-1">
         <header class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom bg-white px-4 py-3"
-                style="margin:-25px -30px 25px;padding-left:30px!important;padding-right:30px!important;">
+                style="margin:-25px -30px 25px;padding-left:60px!important;padding-right:30px!important;">
             <div>
                 <h5 class="mb-0">@yield('page_title', 'Dashboard')</h5>
             </div>
@@ -105,7 +122,10 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 @stack('scripts')
+
 <script src="{{ asset('js/ux-enhancements.js') }}"></script>
+<script src="{{ asset('js/mobile-menu.js') }}"></script>
 </body>
 </html>

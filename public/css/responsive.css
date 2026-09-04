@@ -1,13 +1,20 @@
 /* =========================================================
-   MARKETSMART - RESPONSIVE LAYER
-   ---------------------------------------------------------
-   Ce fichier ne modifie PAS la logique de l'application.
-   Il corrige uniquement l'affichage sur :
-   - ordinateurs
-   - tablettes
-   - téléphones
-   - petits téléphones
-   - écrans pliables
+   MARKETSMART
+   RESPONSIVE.CSS — VERSION PROPRE
+   =========================================================
+   Objectifs :
+   - Headbar toujours visible
+   - Hamburger toujours accessible
+   - Sidebar mobile off-canvas
+   - Sidebar scrollable indépendamment
+   - Aucun chevauchement
+   - Admin / Manager / Caissier
+   - Téléphone / tablette / paysage
+   ========================================================= */
+
+
+/* =========================================================
+   1. BASE DE SÉCURITÉ
    ========================================================= */
 
 *,
@@ -16,10 +23,18 @@
     box-sizing: border-box;
 }
 
-html,
+html {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
 body {
     width: 100%;
     max-width: 100%;
+    min-height: 100%;
+    margin: 0;
     overflow-x: hidden;
 }
 
@@ -28,486 +43,27 @@ svg,
 video,
 canvas {
     max-width: 100%;
+    height: auto;
 }
 
 input,
 select,
 textarea,
-button {
+button,
+.form-control,
+.form-select {
     max-width: 100%;
 }
-
-
-/* =========================================================
-   1. ADMIN
-   ========================================================= */
 
 .admin-main,
 .admin-content,
 .admin-header,
-.admin-table-wrap,
-.admin-table-wrap table {
-    min-width: 0;
-}
-
-.admin-table-wrap {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.admin-table-wrap table {
-    min-width: 650px;
-}
-
-
-/* ---------------- TABLETTE / PETIT ÉCRAN ---------------- */
-
-@media (max-width: 991.98px) {
-
-    /*
-     * La sidebar Admin devient une barre horizontale.
-     * Aucun lien n'est supprimé.
-     */
-    .admin-sidebar {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: 86px;
-
-        padding: 7px 8px !important;
-
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center;
-
-        gap: 4px;
-
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-
-    .admin-sidebar .brand {
-        flex: 0 0 auto;
-        width: auto;
-        padding: 5px 9px;
-        margin: 0 3px 0 0;
-        white-space: nowrap;
-    }
-
-    .admin-sidebar .brand .logo-circle {
-        width: 40px;
-        height: 40px;
-    }
-
-    .admin-sidebar .brand .logo-circle svg {
-        width: 22px;
-        height: 22px;
-    }
-
-    .admin-sidebar .brand .brand-name {
-        font-size: 1rem;
-    }
-
-    .admin-sidebar .brand .brand-sub {
-        font-size: .58rem;
-    }
-
-    .admin-sidebar .nav-link {
-        flex: 0 0 auto;
-
-        width: auto;
-        min-width: max-content;
-
-        margin: 0 2px;
-        padding: 10px 12px;
-
-        border-left: 0 !important;
-        border-radius: 8px;
-
-        white-space: nowrap;
-        font-size: .82rem;
-    }
-
-    .admin-main {
-        width: 100% !important;
-        margin-left: 0 !important;
-
-        min-height: calc(100vh - 86px);
-    }
-
-    .admin-header {
-        width: 100%;
-        height: auto;
-
-        min-height: 68px;
-
-        padding: 12px 16px;
-
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .admin-header > div:last-child {
-        min-width: 0;
-        max-width: 100%;
-
-        flex: 1 1 300px;
-
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .admin-header .search-box {
-        min-width: 160px;
-        max-width: 320px;
-        flex: 1 1 180px;
-    }
-
-    .admin-content {
-        width: 100%;
-        padding: 16px;
-    }
-
-    .admin-content .row {
-        max-width: 100%;
-    }
-
-    .admin-content .card,
-    .admin-content .stat-card {
-        min-width: 0;
-        max-width: 100%;
-    }
-}
-
-
-/* ---------------- TÉLÉPHONE ---------------- */
-
-@media (max-width: 575.98px) {
-
-    .admin-sidebar {
-        max-height: 78px;
-        padding: 6px !important;
-    }
-
-    .admin-sidebar .brand {
-        padding: 4px 7px;
-    }
-
-    /* Sur très petit écran, seul le logo reste visible */
-    .admin-sidebar .brand > div:last-child {
-        display: none;
-    }
-
-    .admin-sidebar .brand .logo-circle {
-        width: 38px;
-        height: 38px;
-    }
-
-    .admin-sidebar .nav-link {
-        padding: 9px 11px;
-        font-size: .78rem;
-    }
-
-    .admin-main {
-        min-height: calc(100vh - 78px);
-    }
-
-    .admin-header {
-        padding: 12px;
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .admin-header .welcome {
-        font-size: 1rem;
-    }
-
-    .admin-header > div:last-child {
-        width: 100%;
-        flex: none;
-
-        justify-content: stretch;
-        align-items: center;
-    }
-
-    .admin-header .search-box {
-        width: 100%;
-        max-width: none;
-        min-width: 0;
-    }
-
-    .admin-content {
-        padding: 12px;
-    }
-
-    .admin-table-wrap {
-        padding: 12px;
-        border-radius: 10px;
-    }
-
-    .admin-table-wrap table {
-        min-width: 620px;
-    }
-
-    .admin-content .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
-
-
-/* =========================================================
-   2. MANAGER / INVENTORY MANAGER
-   ========================================================= */
-
 .main-content,
-.main-content > *,
-.main-content .card,
-.main-content .row > [class*="col-"] {
-    min-width: 0;
-}
-
-.main-content .table-responsive {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-
-/* ---------------- TABLETTE ---------------- */
-
-@media (max-width: 991.98px) {
-
-    .sidebar {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-
-        width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: 86px;
-
-        padding: 7px 8px !important;
-
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center;
-
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-
-    .sidebar-logo {
-        flex: 0 0 auto;
-
-        padding: 5px 9px !important;
-
-        border-bottom: 0 !important;
-    }
-
-    .sidebar-logo a {
-        gap: 8px;
-        white-space: nowrap;
-    }
-
-    .sidebar-logo .logo-circle {
-        width: 40px;
-        height: 40px;
-    }
-
-    .sidebar-logo .logo-circle svg {
-        width: 22px;
-        height: 22px;
-    }
-
-    .sidebar-logo .brand-name {
-        font-size: 1rem;
-    }
-
-    .sidebar-logo .brand-sub {
-        font-size: .58rem;
-    }
-
-    .sidebar-nav {
-        flex: 1 1 auto;
-
-        min-width: 0;
-        width: auto;
-
-        display: flex;
-        align-items: center;
-
-        overflow-x: auto;
-        overflow-y: hidden;
-
-        padding: 7px 4px;
-
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .sidebar-nav .nav-link {
-        flex: 0 0 auto;
-
-        width: auto;
-        min-width: max-content;
-
-        margin: 0 2px;
-        padding: 10px 12px;
-
-        white-space: nowrap;
-        border-radius: 8px;
-
-        font-size: .82rem;
-    }
-
-    .main-content {
-        width: 100% !important;
-
-        margin-left: 0 !important;
-
-        padding: 16px !important;
-    }
-
-    /*
-     * Correction du header Manager.
-     * Ton layout utilise actuellement des marges négatives
-     * pour le header.
-     */
-    .main-content > header {
-        margin: -16px -16px 16px !important;
-
-        padding: 12px 16px !important;
-
-        min-height: 68px;
-
-        height: auto;
-
-        gap: 12px;
-
-        flex-wrap: wrap;
-    }
-
-    .main-content .card {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .main-content .card-body {
-        min-width: 0;
-    }
-
-    .main-content .row {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .main-content .btn {
-        max-width: 100%;
-        white-space: normal;
-    }
-}
-
-
-/* ---------------- TÉLÉPHONE ---------------- */
-
-@media (max-width: 575.98px) {
-
-    .sidebar {
-        max-height: 78px;
-        padding: 6px !important;
-    }
-
-    .sidebar-logo {
-        padding: 4px 7px !important;
-    }
-
-    .sidebar-logo > a > div:last-child {
-        display: none;
-    }
-
-    .sidebar-logo .logo-circle {
-        width: 38px;
-        height: 38px;
-    }
-
-    .sidebar-nav .nav-link {
-        padding: 9px 11px;
-        font-size: .78rem;
-    }
-
-    .main-content {
-        padding: 12px !important;
-    }
-
-    .main-content > header {
-        margin: -12px -12px 12px !important;
-
-        padding: 10px 12px !important;
-
-        flex-direction: column;
-
-        align-items: stretch !important;
-    }
-
-    .main-content > header .dropdown,
-    .main-content > header .dropdown > button {
-        width: 100%;
-    }
-
-    .main-content > header .dropdown > button {
-        justify-content: center;
-    }
-
-    .page-header {
-        flex-direction: column !important;
-
-        align-items: flex-start !important;
-
-        gap: 10px;
-    }
-
-    .card-header,
-    .card-body {
-        padding: 14px;
-    }
-
-    .stat-card {
-        padding: 14px;
-        min-width: 0;
-    }
-
-    .main-content .table {
-        white-space: nowrap;
-    }
-}
-
-
-/* =========================================================
-   3. CASHIER / CAISSIER
-   ========================================================= */
-
 .main,
 .content,
 .card,
+.card-body,
+.card-header,
 .payment-layout,
 .form-grid,
 .grid,
@@ -515,381 +71,1230 @@ button {
     min-width: 0;
 }
 
-.table-wrap {
+
+/* =========================================================
+   2. TABLEAUX
+   ========================================================= */
+
+.table-responsive,
+.table-wrap,
+.admin-table-wrap {
     width: 100%;
     max-width: 100%;
-
     overflow-x: auto;
-
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
+.table-responsive table,
+.table-wrap table,
+.admin-table-wrap table {
+    max-width: none;
+}
 
-/* ---------------- TABLETTE ---------------- */
+
+/* =========================================================
+   3. HAMBURGER
+   Desktop : invisible
+   Mobile/tablette : toujours fixe dans la zone de headbar
+   ========================================================= */
+
+.mobile-menu-toggle {
+    display: none;
+}
+
+
+/* =========================================================
+   4. BACKDROP
+   ========================================================= */
+
+.mobile-menu-backdrop {
+    display: none;
+}
+
+
+/* =========================================================
+   5. MOBILE + TABLETTE
+   ========================================================= */
 
 @media (max-width: 991.98px) {
 
-    .sidebar {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
+    /* -----------------------------------------------------
+       STRUCTURE GÉNÉRALE
+       ----------------------------------------------------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+
+    /* -----------------------------------------------------
+       HAMBURGER
+
+       Il est FIXE.
+       Il reste donc toujours accessible même pendant
+       le défilement de la page.
+       ----------------------------------------------------- */
+
+    .mobile-menu-toggle {
+        position: fixed !important;
+
+        top: 10px !important;
+        left: 12px !important;
+
+        width: 44px !important;
+        height: 44px !important;
+
+        display: flex !important;
+
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        gap: 5px;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border: none !important;
+        border-radius: 10px;
+
+        background: #ffffff;
+
+        box-shadow: 0 3px 14px rgba(0, 0, 0, 0.16);
+
+        cursor: pointer;
+
+        z-index: 1500 !important;
+
+        -webkit-tap-highlight-color: transparent;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .mobile-menu-toggle:active {
+        transform: scale(0.95);
+    }
+
+    .mobile-menu-toggle span {
+        display: block;
+
+        width: 21px;
+        height: 2px;
+
+        flex: 0 0 auto;
+
+        border-radius: 999px;
+
+        background: #c47a1a;
+
+        transition:
+            transform 0.25s ease,
+            opacity 0.25s ease;
+    }
+
+
+    /* -----------------------------------------------------
+       HAMBURGER → X
+       ----------------------------------------------------- */
+
+    body.mobile-menu-active .mobile-menu-toggle span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    body.mobile-menu-active .mobile-menu-toggle span:nth-child(2) {
+        opacity: 0;
+    }
+
+    body.mobile-menu-active .mobile-menu-toggle span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+
+    /* -----------------------------------------------------
+       BACKDROP
+       ----------------------------------------------------- */
+
+    .mobile-menu-backdrop {
+        display: block !important;
+
+        position: fixed !important;
+
+        inset: 0;
+
+        background: rgba(0, 0, 0, 0.45);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease;
+
+        z-index: 1400 !important;
+    }
+
+    .mobile-menu-backdrop.mobile-menu-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+
+    /* -----------------------------------------------------
+       BLOQUER LE SCROLL DE LA PAGE QUAND LE MENU EST OUVERT
+       ----------------------------------------------------- */
+
+    body.mobile-menu-active {
+        overflow: hidden !important;
+        touch-action: none;
+    }
+
+
+    /* =====================================================
+       ADMIN
+       ===================================================== */
+
+    /* -----------------------------------------------------
+       SIDEBAR ADMIN
+       ----------------------------------------------------- */
+
+    .admin-sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: min(86vw, 340px) !important;
+
+        height: 100vh !important;
+        height: 100dvh !important;
+
+        min-height: 100dvh !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding: 12px 0 !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+
+        transform: translateX(-105%);
+
+        transition: transform 0.3s ease;
+
+        z-index: 1450 !important;
+    }
+
+    .admin-sidebar.mobile-menu-open {
+        transform: translateX(0);
+    }
+
+
+    /* -----------------------------------------------------
+       BRAND ADMIN
+       ----------------------------------------------------- */
+
+    .admin-sidebar .brand {
+        width: 100%;
+
+        padding: 12px 18px 16px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       NAVIGATION ADMIN
+       ----------------------------------------------------- */
+
+    .admin-sidebar .nav-link {
+        width: calc(100% - 20px) !important;
+
+        min-height: 46px !important;
+        height: auto !important;
+
+        margin: 4px 10px !important;
+
+        padding: 11px 14px !important;
+
+        white-space: normal;
+
+        overflow-wrap: anywhere;
+
+        line-height: 1.25;
+
+        flex-shrink: 0;
+    }
+
+
+    /* -----------------------------------------------------
+       HEADBAR ADMIN
+       -----------------------------------------------------
+
+       IMPORTANT :
+       Elle est FIXE.
+       Elle ne disparaît donc jamais pendant le scroll.
+       ----------------------------------------------------- */
+
+    .admin-header {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
 
         width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: 86px;
 
-        padding: 7px 8px !important;
+        min-height: 64px !important;
+        height: 64px !important;
 
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center;
+        margin: 0 !important;
 
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-
-    .sidebar-logo {
-        flex: 0 0 auto;
-
-        padding: 5px 9px !important;
-
-        border-bottom: 0 !important;
-    }
-
-    .sidebar-logo a {
-        gap: 8px;
-        white-space: nowrap;
-    }
-
-    .sidebar-logo .logo-circle {
-        width: 40px;
-        height: 40px;
-    }
-
-    .sidebar-logo .logo-circle svg {
-        width: 22px;
-        height: 22px;
-    }
-
-    .sidebar-logo .brand-name {
-        font-size: 1rem;
-    }
-
-    .sidebar-logo .brand-sub {
-        font-size: .58rem;
-    }
-
-    .sidebar .nav {
-        flex: 1 1 auto;
-
-        min-width: 0;
-        width: auto;
+        padding: 8px 12px 8px 68px !important;
 
         display: flex !important;
-        flex-direction: row !important;
+
+        align-items: center !important;
+
+        gap: 10px !important;
+
         flex-wrap: nowrap !important;
-        align-items: center;
 
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
+        overflow: visible !important;
 
-        padding: 7px 4px;
-
-        -webkit-overflow-scrolling: touch;
+        z-index: 1350 !important;
     }
 
-    .sidebar .nav .nav-link {
-        flex: 0 0 auto;
+
+    /* -----------------------------------------------------
+       CONTENU ADMIN
+
+       On réserve l'espace de la headbar.
+       ----------------------------------------------------- */
+
+    .admin-main {
+        width: 100% !important;
+
+        margin-left: 0 !important;
+
+        min-width: 0 !important;
+    }
+
+    .admin-content {
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding: 80px 16px 20px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       ÉLÉMENTS DE LA HEADBAR ADMIN
+       ----------------------------------------------------- */
+
+    .admin-header > div {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .admin-header > div:first-child {
+        flex: 1 1 auto !important;
+
+        min-width: 0 !important;
+
+        overflow: hidden;
+    }
+
+    .admin-header > div:last-child {
+        flex: 0 1 auto !important;
 
         width: auto !important;
 
-        min-width: max-content;
+        max-width: 55% !important;
 
-        height: auto !important;
+        min-width: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: flex-end !important;
+
+        gap: 8px !important;
+
+        flex-wrap: nowrap !important;
+    }
+
+
+    /* -----------------------------------------------------
+       RECHERCHE ADMIN
+       ----------------------------------------------------- */
+
+    .admin-header .search-box {
+        min-width: 0 !important;
+
+        width: auto !important;
+
+        max-width: 240px !important;
+
+        flex: 1 1 180px !important;
+    }
+
+
+    /* =====================================================
+       MANAGER
+       ===================================================== */
+
+    /* -----------------------------------------------------
+       STRUCTURE
+       ----------------------------------------------------- */
+
+    body > .d-flex {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR MANAGER
+       ----------------------------------------------------- */
+
+    body > .d-flex .sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: min(86vw, 340px) !important;
+
+        height: 100vh !important;
+        height: 100dvh !important;
+
+        min-height: 100dvh !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        overflow: hidden !important;
+
+        transform: translateX(-105%);
+
+        transition: transform 0.3s ease;
+
+        z-index: 1450 !important;
+    }
+
+    body > .d-flex .sidebar.mobile-menu-open {
+        transform: translateX(0);
+    }
+
+
+    /* -----------------------------------------------------
+       LOGO MANAGER
+       ----------------------------------------------------- */
+
+    body > .d-flex .sidebar-logo {
+        flex: 0 0 auto !important;
+
+        width: 100% !important;
+
+        padding: 14px 18px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       MENU MANAGER
+       ----------------------------------------------------- */
+
+    body > .d-flex .sidebar-nav {
+        flex: 1 1 auto !important;
+
         min-height: 0 !important;
 
-        margin: 0 2px !important;
+        width: 100% !important;
 
-        padding: 10px 12px !important;
+        padding: 8px 10px 18px !important;
 
-        white-space: nowrap;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
 
-        border-radius: 8px;
+        overscroll-behavior: contain;
 
-        font-size: .82rem;
+        -webkit-overflow-scrolling: touch;
     }
+
+    body > .d-flex .sidebar-nav .nav-link {
+        display: flex !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+
+        min-height: 46px !important;
+        height: auto !important;
+
+        margin: 4px 0 !important;
+
+        padding: 11px 14px !important;
+
+        white-space: normal;
+
+        overflow-wrap: anywhere;
+
+        line-height: 1.25;
+
+        flex-shrink: 0;
+    }
+
+
+    /* -----------------------------------------------------
+       MAIN MANAGER
+       ----------------------------------------------------- */
+
+    .main-content {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        margin-left: 0 !important;
+
+        min-width: 0 !important;
+
+        padding: 80px 16px 20px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HEADBAR MANAGER
+       ----------------------------------------------------- */
+
+    .main-content > header {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+
+        width: 100% !important;
+
+        height: 64px !important;
+        min-height: 64px !important;
+
+        margin: 0 !important;
+
+        padding: 8px 12px 8px 68px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        gap: 10px !important;
+
+        flex-wrap: nowrap !important;
+
+        overflow: visible !important;
+
+        z-index: 1350 !important;
+    }
+
+    .main-content > header > div {
+        min-width: 0 !important;
+
+        max-width: 100% !important;
+    }
+
+
+    /* =====================================================
+       CAISSIER
+       ===================================================== */
+
+    /* -----------------------------------------------------
+       STRUCTURE
+       ----------------------------------------------------- */
+
+    .app {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR CAISSIER
+       ----------------------------------------------------- */
+
+    .app .sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: min(86vw, 340px) !important;
+
+        height: 100vh !important;
+        height: 100dvh !important;
+
+        min-height: 100dvh !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        overflow: hidden !important;
+
+        transform: translateX(-105%);
+
+        transition: transform 0.3s ease;
+
+        z-index: 1450 !important;
+    }
+
+    .app .sidebar.mobile-menu-open {
+        transform: translateX(0);
+    }
+
+
+    /* -----------------------------------------------------
+       LOGO CAISSIER
+       ----------------------------------------------------- */
+
+    .app .sidebar-logo {
+        flex: 0 0 auto !important;
+
+        width: 100% !important;
+
+        padding: 14px 18px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       MENU CAISSIER
+       ----------------------------------------------------- */
+
+    .app .sidebar .nav {
+        flex: 1 1 auto !important;
+
+        min-height: 0 !important;
+
+        width: 100% !important;
+
+        display: block !important;
+
+        padding: 8px 10px 18px !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        overscroll-behavior: contain;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .app .sidebar .nav .nav-link {
+        display: flex !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+
+        min-height: 46px !important;
+        height: auto !important;
+
+        margin: 4px 0 !important;
+
+        padding: 11px 14px !important;
+
+        white-space: normal;
+
+        overflow-wrap: anywhere;
+
+        line-height: 1.25;
+
+        flex-shrink: 0;
+    }
+
+
+    /* -----------------------------------------------------
+       MAIN CAISSIER
+       ----------------------------------------------------- */
 
     .main {
         width: 100% !important;
+
+        max-width: 100% !important;
+
         margin-left: 0 !important;
+
+        min-width: 0 !important;
     }
+
+
+    /* -----------------------------------------------------
+       HEADBAR CAISSIER
+       ----------------------------------------------------- */
 
     .topbar {
-        height: auto;
+        position: fixed !important;
 
-        min-height: 68px;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
 
-        padding: 12px 16px;
+        width: 100% !important;
 
-        gap: 12px;
+        height: 64px !important;
+        min-height: 64px !important;
 
-        flex-wrap: wrap;
+        margin: 0 !important;
+
+        padding: 8px 12px 8px 68px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        gap: 10px !important;
+
+        flex-wrap: nowrap !important;
+
+        overflow: visible !important;
+
+        z-index: 1350 !important;
     }
 
+
+    /* -----------------------------------------------------
+       CONTENU CAISSIER
+       ----------------------------------------------------- */
+
+    .content {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding: 80px 16px 20px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       ÉLÉMENTS TOPBAR
+       ----------------------------------------------------- */
+
     .page-title {
-        min-width: 0;
-        flex: 1 1 180px;
+        flex: 1 1 auto !important;
+
+        min-width: 0 !important;
+
+        overflow: hidden;
     }
 
     .top-actions {
-        min-width: 0;
+        flex: 0 1 auto !important;
 
-        flex: 1 1 180px;
+        min-width: 0 !important;
 
-        justify-content: flex-end;
+        max-width: 55% !important;
 
-        flex-wrap: wrap;
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: flex-end !important;
+
+        gap: 8px !important;
+
+        flex-wrap: nowrap !important;
     }
 
-    .content {
+
+    /* =====================================================
+       CONTENU / GRILLES
+       ===================================================== */
+
+    .admin-content .row,
+    .main-content .row {
         width: 100%;
 
-        padding: 16px;
+        max-width: 100%;
+
+        margin-left: 0;
+
+        margin-right: 0;
     }
 
-    .payment-layout {
-        grid-template-columns: 1fr !important;
+    .admin-content .row > *,
+    .main-content .row > * {
+        min-width: 0;
     }
 
+
+    /* -----------------------------------------------------
+       GRILLES MANAGER / CAISSIER
+       ----------------------------------------------------- */
+
+    .payment-layout,
     .grid-2,
     .grid-3,
     .grid-4,
     .form-grid {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: minmax(0, 1fr) !important;
     }
+
+
+    /* -----------------------------------------------------
+       SHOP
+       ----------------------------------------------------- */
 
     .shop-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
     }
 
-    .card-header {
-        gap: 10px;
-        flex-wrap: wrap;
-    }
+
+    /* -----------------------------------------------------
+       FORMULAIRES
+       ----------------------------------------------------- */
 
     .form-group,
     .search,
-    .search-row {
+    .search-row > * {
         min-width: 0;
+
+        max-width: 100%;
     }
 
-    .search-row {
+    .search-row,
+    .card-header,
+    .profile-head,
+    .cart-item,
+    .no-print {
         flex-wrap: wrap;
     }
 
-    .receipt {
+
+    /* -----------------------------------------------------
+       TABLEAUX
+       ----------------------------------------------------- */
+
+    .admin-table-wrap {
+        padding: 12px;
+    }
+
+    .admin-table-wrap table,
+    .main-content .table-responsive table,
+    .table-wrap table {
+        min-width: 650px;
+    }
+
+
+    /* -----------------------------------------------------
+       PROFIL
+       ----------------------------------------------------- */
+
+    .msprofile-wrap,
+    .msprofile-card {
         width: 100%;
-        max-width: 760px;
+
+        max-width: 100%;
+    }
+
+    .msprofile-top,
+    .profile-head {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+    }
+
+    .msprofile-avatar-wrap,
+    .msprofile-info,
+    .profile-info {
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        max-width: 100% !important;
+    }
+
+    .msprofile-row {
+        display: grid;
+
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 4px;
+    }
+
+    .msprofile-row .label {
+        width: auto;
+    }
+
+    .msprofile-row .value {
+        min-width: 0;
+
+        overflow-wrap: anywhere;
+
+        word-break: break-word;
+    }
+
+    .msprofile-stats {
+        flex-direction: column;
+
+        gap: 12px;
     }
 }
 
 
-/* ---------------- TÉLÉPHONE ---------------- */
+/* =========================================================
+   6. TÉLÉPHONES
+   ========================================================= */
 
 @media (max-width: 575.98px) {
 
-    .sidebar {
-        max-height: 78px;
-        padding: 6px !important;
+    /* -----------------------------------------------------
+       HAMBURGER
+       ----------------------------------------------------- */
+
+    .mobile-menu-toggle {
+        top: 9px !important;
+        left: 10px !important;
+
+        width: 42px !important;
+        height: 42px !important;
+
+        border-radius: 9px;
     }
 
-    .sidebar-logo {
-        padding: 4px 7px !important;
+    .mobile-menu-toggle span {
+        width: 20px;
     }
 
-    .sidebar-logo > a > div:last-child {
-        display: none;
+
+    /* -----------------------------------------------------
+       SIDEBARS
+       ----------------------------------------------------- */
+
+    .admin-sidebar,
+    body > .d-flex .sidebar,
+    .app .sidebar {
+        width: min(90vw, 330px) !important;
     }
 
-    .sidebar-logo .logo-circle {
-        width: 38px;
-        height: 38px;
-    }
 
-    .sidebar .nav .nav-link {
-        padding: 9px 11px !important;
-        font-size: .78rem;
-    }
+    /* -----------------------------------------------------
+       HEADBARS
+       ----------------------------------------------------- */
 
+    .admin-header,
+    .main-content > header,
     .topbar {
-        padding: 10px 12px;
+        height: 60px !important;
+        min-height: 60px !important;
 
+        padding-left: 62px !important;
+
+        padding-top: 7px !important;
+        padding-bottom: 7px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       CONTENU
+       ----------------------------------------------------- */
+
+    .admin-content,
+    .main-content,
+    .content {
+        padding-top: 74px !important;
+
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+
+        padding-bottom: 16px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TITRES
+       ----------------------------------------------------- */
+
+    .page-title {
+        min-width: 0 !important;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+    }
+
+
+    /* -----------------------------------------------------
+       TOP ACTIONS
+       ----------------------------------------------------- */
+
+    .top-actions {
+        max-width: 48% !important;
+
+        gap: 5px !important;
+    }
+
+    .top-actions .user-mini,
+    .user-meta {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       RECHERCHE
+       ----------------------------------------------------- */
+
+    .admin-header .search-box {
+        max-width: 150px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SHOP
+       ----------------------------------------------------- */
+
+    .shop-grid,
+    .pay-methods {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SEARCH ROW
+       ----------------------------------------------------- */
+
+    .search-row {
         flex-direction: column;
 
         align-items: stretch;
     }
 
-    .page-title h1 {
-        font-size: 18px;
+    .search-row > * {
+        width: 100%;
     }
 
-    .top-actions {
+
+    /* -----------------------------------------------------
+       CART / PAYMENT
+       ----------------------------------------------------- */
+
+    .payment-layout,
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+
+    /* -----------------------------------------------------
+       CART / RECEIPT
+       ----------------------------------------------------- */
+
+    .receipt {
         width: 100%;
 
-        justify-content: stretch;
+        max-width: 100%;
     }
 
-    .top-actions .user-mini {
-        display: none;
+    .receipt-meta {
+        display: grid;
+
+        grid-template-columns: minmax(0, 1fr);
+
+        gap: 6px;
     }
 
-    .content {
-        padding: 12px;
+
+    /* -----------------------------------------------------
+       BUTTONS PRINT / ACTIONS
+       ----------------------------------------------------- */
+
+    .no-print .btn {
+        width: 100%;
     }
 
-    .shop-grid {
-        grid-template-columns: 1fr !important;
-    }
+
+    /* -----------------------------------------------------
+       CARDS
+       ----------------------------------------------------- */
 
     .card-header,
     .card-body {
         padding: 14px;
     }
 
-    .profile-head {
-        flex-wrap: wrap;
+    .msprofile-card {
+        padding: 16px;
     }
 
-    .notification {
-        align-items: flex-start;
+
+    /* -----------------------------------------------------
+       TABLEAUX
+       ----------------------------------------------------- */
+
+    .admin-table-wrap {
+        padding: 10px;
     }
 
-    .pay-methods {
-        grid-template-columns: 1fr;
-    }
-
-    .receipt-meta {
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .no-print {
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        max-width: 100%;
+    .admin-table-wrap table,
+    .main-content .table-responsive table,
+    .table-wrap table {
+        min-width: 620px;
     }
 }
 
 
 /* =========================================================
-   4. TRÈS PETITS TÉLÉPHONES
+   7. TRÈS PETITS TÉLÉPHONES
    ========================================================= */
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
 
-    .content,
-    .main-content,
-    .admin-content {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+    .mobile-menu-toggle {
+        width: 40px !important;
+        height: 40px !important;
+
+        top: 9px !important;
+        left: 8px !important;
     }
 
+    .mobile-menu-toggle span {
+        width: 19px;
+    }
+
+    .admin-header,
+    .main-content > header,
+    .topbar {
+        padding-left: 58px !important;
+    }
+
+    .admin-content,
+    .main-content,
+    .content {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .admin-table-wrap,
     .card-header,
-    .card-body,
-    .admin-table-wrap {
+    .card-body {
         padding-left: 10px;
         padding-right: 10px;
     }
 
-    .shop-product {
-        padding: 11px;
-    }
-
-    .form-control,
-    .btn {
-        font-size: 13px;
+    .admin-header .search-box {
+        max-width: 120px !important;
     }
 }
 
 
 /* =========================================================
-   5. TABLEAUX SUR PETITS ÉCRANS
+   8. TÉLÉPHONE EN MODE PAYSAGE
    ========================================================= */
 
-/*
- * On ne détruit PAS les tableaux.
- * Lorsqu'un tableau est trop large, l'utilisateur peut
- * simplement le faire défiler horizontalement.
- */
+@media (max-width: 991.98px)
+and (orientation: landscape)
+and (max-height: 600px) {
+
+    /* -----------------------------------------------------
+       HEADBAR PLUS COMPACTE
+       ----------------------------------------------------- */
+
+    .admin-header,
+    .main-content > header,
+    .topbar {
+        height: 56px !important;
+        min-height: 56px !important;
+
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .mobile-menu-toggle {
+        top: 7px !important;
+
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       CONTENU
+       ----------------------------------------------------- */
+
+    .admin-content,
+    .main-content,
+    .content {
+        padding-top: 70px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR
+       ----------------------------------------------------- */
+
+    .admin-sidebar,
+    body > .d-flex .sidebar,
+    .app .sidebar {
+        width: min(55vw, 340px) !important;
+
+        height: 100dvh !important;
+    }
+
+
+    /* -----------------------------------------------------
+       LIENS SIDEBAR
+       ----------------------------------------------------- */
+
+    .admin-sidebar .nav-link,
+    body > .d-flex .sidebar-nav .nav-link,
+    .app .sidebar .nav .nav-link {
+        min-height: 42px !important;
+
+        padding-top: 9px !important;
+        padding-bottom: 9px !important;
+    }
+}
+
+
+/* =========================================================
+   9. MODALES
+   ========================================================= */
 
 @media (max-width: 767.98px) {
-
-    .table-responsive,
-    .table-wrap,
-    .admin-table-wrap {
-        max-width: 100%;
-        overflow-x: auto;
-
-        -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-        max-width: none;
-    }
-}
-
-
-/* =========================================================
-   6. FORMULAIRES
-   ========================================================= */
-
-@media (max-width: 767.98px) {
-
-    form {
-        max-width: 100%;
-    }
-
-    .form-control,
-    .form-select,
-    input,
-    select,
-    textarea {
-        max-width: 100%;
-    }
-
-    .input-group {
-        max-width: 100%;
-        flex-wrap: nowrap;
-    }
-
-    .btn-group {
-        max-width: 100%;
-        flex-wrap: wrap;
-    }
-}
-
-
-/* =========================================================
-   7. MODALES BOOTSTRAP
-   ========================================================= */
-
-@media (max-width: 575.98px) {
 
     .modal-dialog {
         width: auto;
-        max-width: none;
 
-        margin: .5rem;
-    }
+        max-width: calc(100% - 20px);
 
-    .modal-content {
-        max-width: 100%;
+        margin: 10px auto;
     }
 
     .modal-body {
@@ -900,36 +1305,48 @@ button {
         flex-wrap: wrap;
     }
 
-    .modal-footer .btn {
-        flex: 1 1 auto;
-    }
-}
-
-
-/* =========================================================
-   8. DROPDOWN
-   ========================================================= */
-
-@media (max-width: 575.98px) {
-
     .dropdown-menu {
         max-width: calc(100vw - 24px);
     }
-}
-
-
-/* =========================================================
-   9. ÉVITER LES DÉBORDEMENTS DE TEXTE
-   ========================================================= */
-
-@media (max-width: 767.98px) {
 
     .card,
     .stat-card,
     .admin-table-wrap,
     .shop-product,
     .notification,
-    .profile-head {
+    .profile-head,
+    .page-title,
+    .page-subtitle {
         overflow-wrap: anywhere;
     }
+}
+
+
+/* =========================================================
+   10. ACCESSIBILITÉ / MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .mobile-menu-toggle,
+    .mobile-menu-toggle span,
+    .mobile-menu-backdrop,
+    .admin-sidebar,
+    body > .d-flex .sidebar,
+    .app .sidebar {
+        transition: none !important;
+    }
+    @media (max-widht: 991.98px) {
+        .admin-header .search-box{
+            display: none !important;
+        }
+        .main-content > header .search-box{
+            display: none !important;
+        }
+        .topbar .search{
+            display: none !important;
+        }
+    }
+    
+    
 }

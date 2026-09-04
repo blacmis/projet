@@ -1,11 +1,7 @@
 <header class="admin-header">
     <div class="welcome">Welcome back, admin</div>
 
-    <div style="display:flex;align-items:center;gap:14px;">
-        <form method="GET" action="{{ route('admin.search') }}" class="search-box">
-            <input type="text" name="q" value="{{ request('q') }}" placeholder="search anything">
-            <button type="submit" style="border:none;background:transparent;cursor:pointer;">🔍</button>
-        </form>
+    
 
         <a href="{{ route('admin.notifications') }}" style="font-size:1.25rem;text-decoration:none;">🔔</a>
 
