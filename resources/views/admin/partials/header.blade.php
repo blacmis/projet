@@ -1,8 +1,7 @@
 <header class="admin-header">
     <div class="welcome">Welcome back, admin</div>
 
-    
-
+    <div>
         <a href="{{ route('admin.notifications') }}" style="font-size:1.25rem;text-decoration:none;">🔔</a>
 
         <div class="dropdown">
@@ -19,13 +18,14 @@
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="adminUserMenu">
                 <li><a class="dropdown-item" href="{{ route('admin.profile') }}">👤 Mon profil</a></li>
                 <li><hr class="dropdown-divider"></li>
-                    <li><form method="POST" action="{{ route('logout') }}">
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                            <button type="submit" class="dropdown-item text-danger">
-                                🚪 Déconnexion
-                            </button>
-                        </form>
-                    </li>
+                        <button type="submit" class="dropdown-item text-danger">
+                            🚪 Déconnexion
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

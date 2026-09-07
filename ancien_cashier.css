@@ -1,3 +1,4 @@
+
 /* =========================================================
    MARKETSMART CASHIER UI
    One CSS file for all cashier pages
@@ -75,12 +76,15 @@ button{cursor:pointer;border:0}
     align-items: center;
     gap: 12px;
 
+    /* Même dimension pour TOUS les boutons */
     width: calc(100% - 20px);
     height: 64px;
     min-height: 64px;
 
+    /* Même espace intérieur */
     padding: 0 18px;
 
+    /* Même espacement entre les boutons */
     margin: 8px 10px;
 
     color: rgba(255, 255, 255, 0.92);
@@ -88,6 +92,7 @@ button{cursor:pointer;border:0}
     border-radius: 8px;
     font-size: 0.95rem;
 
+    /* Empêche le contenu de modifier la hauteur */
     box-sizing: border-box;
 
     transition: all 0.2s ease;
@@ -114,13 +119,16 @@ button{cursor:pointer;border:0}
     align-items: center;
     gap: 12px;
 
+    /* Même dimension pour tous les boutons */
     width: calc(100% - 20px);
     height: 64px;
     min-height: 64px;
 
+    /* Alignement identique */
     padding: 0 18px;
     margin: 8px 10px;
 
+    /* État normal */
     background-color: transparent;
     color: rgba(255, 255, 255, 0.92);
 
@@ -137,6 +145,7 @@ button{cursor:pointer;border:0}
         transform 0.2s ease;
 }
 
+/* Icônes */
 .nav .nav-link span {
     width: 22px;
     min-width: 22px;
@@ -152,11 +161,15 @@ button{cursor:pointer;border:0}
     flex-shrink: 0;
 }
 
+/* ===== BOUTON AU SURVOL ===== */
+
 .nav .nav-link:hover {
     background-color: #ffffff;
     color: var(--sidebar-bg);
     font-weight: 600;
 }
+
+/* ===== BOUTON DE LA PAGE ACTUELLE ===== */
 
 .nav .nav-link.active {
     background-color: #ffffff;
@@ -286,6 +299,25 @@ tr:hover td{background:#fcfdff}
 .shop-product .price{font-size:15px;font-weight:800;color:var(--primary-dark);margin-bottom:10px}
 .shop-product .btn{width:100%}
 
+/* RESPONSIVE */
+@media(max-width:1100px){
+    .sidebar{width:205px}.main{margin-left:205px;width:calc(100% - 205px)}
+    .shop-grid{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:800px){
+    .sidebar{position:relative;width:100%;height:auto}
+    .nav{display:flex;flex-wrap:wrap;padding:10px}.nav-title{display:none}
+    .nav-link{margin:0 3px}.sidebar-footer{display:none}
+    .main{margin-left:0;width:100%}.topbar{padding:0 18px}
+    .content{padding:18px}.payment-layout,.grid-2,.grid-3,.form-grid{grid-template-columns:1fr}
+    .shop-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+    .topbar{height:auto;min-height:72px}.page-title h1{font-size:18px}
+    .top-actions .user-mini{display:none}.shop-grid,.grid-4{grid-template-columns:1fr}
+    .search-row{flex-direction:column}.form-grid{grid-template-columns:1fr}
+}
 /* ===== Logo unifié MarketSmart ===== */
 .sidebar-logo {
     padding: 18px 16px;
@@ -397,6 +429,3 @@ tr:hover td{background:#fcfdff}
 .dropdown-item:hover {
     background: #f4f6f8;
 }
-
-/* Tout le responsive (tablette / mobile) est géré exclusivement
-   dans public/css/responsive.css, chargé après ce fichier. */
