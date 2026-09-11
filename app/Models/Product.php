@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
     use HasFactory;
+    use BelongsToTenant;
 
     protected $fillable = [
         'name',

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 
 class CashRegisterSession extends Model
 {
+    use BelongsToTenant;
+
     protected $fillable = [
         'cashier_email', 'cashier_name', 'opening_amount', 'opened_at',
         'expected_cash', 'expected_mobile_money', 'expected_card',

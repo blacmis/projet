@@ -46,7 +46,7 @@ class InventoryReportController extends Controller
                 'product_code' => sprintf('%03d', $p->id),
                 'product_name' => $p->name,
                 'category' => $p->category,
-                'date' => $p->created_at->format('d/m/Y'),
+                'date' => $p->created_at?->format('d/m/Y') ?? '—',
                 'unit_price' => $p->price,
                 'total_stock' => $p->stockInflows->sum('quantity'),
                 'sold_stock' => $p->saleItems()->sum('quantity'),

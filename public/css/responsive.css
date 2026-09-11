@@ -265,7 +265,8 @@ button,
        SIDEBAR ADMIN
        ----------------------------------------------------- */
 
-    .admin-sidebar {
+        .admin-sidebar,
+    .super-admin-sidebar {
         position: fixed !important;
 
         top: 0 !important;
@@ -296,7 +297,8 @@ button,
         z-index: 1450 !important;
     }
 
-    .admin-sidebar.mobile-menu-open {
+    .admin-sidebar.mobile-menu-open,
+    .super-admin-sidebar.mobile-menu-open {        
         transform: translateX(0);
     }
 
@@ -305,7 +307,8 @@ button,
        BRAND ADMIN
        ----------------------------------------------------- */
 
-    .admin-sidebar .brand {
+        .admin-sidebar .brand,
+    .super-admin-sidebar .brand {
         width: 100%;
 
         padding: 12px 18px 16px !important;
@@ -316,7 +319,8 @@ button,
        NAVIGATION ADMIN
        ----------------------------------------------------- */
 
-    .admin-sidebar .nav-link {
+        .admin-sidebar .nav-link,
+    .super-admin-sidebar .nav-link {
         width: calc(100% - 20px) !important;
 
         min-height: 46px !important;
@@ -373,7 +377,16 @@ button,
 
         z-index: 1350 !important;
     }
+    /* Cache le header fixe Admin quand le tiroir mobile est ouvert,
+       pour ne pas recouvrir le premier lien du menu (# DashBoard). */
+    body.mobile-menu-active .admin-header {
+        display: none !important;
+    }
 
+    /* Même règle pour l'espace Super Admin (nouveau module). */
+    body.mobile-menu-active .super-admin-header {
+        display: none !important;
+    }
 
     /* -----------------------------------------------------
        CONTENU ADMIN
@@ -996,7 +1009,8 @@ button,
        SIDEBARS
        ----------------------------------------------------- */
 
-    .admin-sidebar,
+        .admin-sidebar,
+    .super-admin-sidebar,
     body > .d-flex .sidebar,
     .app .sidebar {
         width: min(90vw, 330px) !important;
@@ -1259,7 +1273,8 @@ and (max-height: 600px) {
        SIDEBAR
        ----------------------------------------------------- */
 
-    .admin-sidebar,
+        .admin-sidebar,
+    .super-admin-sidebar,
     body > .d-flex .sidebar,
     .app .sidebar {
         width: min(55vw, 340px) !important;
@@ -1272,7 +1287,8 @@ and (max-height: 600px) {
        LIENS SIDEBAR
        ----------------------------------------------------- */
 
-    .admin-sidebar .nav-link,
+        .admin-sidebar .nav-link,
+    .super-admin-sidebar .nav-link,
     body > .d-flex .sidebar-nav .nav-link,
     .app .sidebar .nav .nav-link {
         min-height: 42px !important;
@@ -1331,7 +1347,8 @@ and (max-height: 600px) {
     .mobile-menu-toggle,
     .mobile-menu-toggle span,
     .mobile-menu-backdrop,
-    .admin-sidebar,
+        .admin-sidebar,
+    .super-admin-sidebar,
     body > .d-flex .sidebar,
     .app .sidebar {
         transition: none !important;

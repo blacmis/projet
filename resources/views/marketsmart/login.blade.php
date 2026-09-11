@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In | MarketSmart</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/ux-enhancements.css') }}">
     <style>
         * { box-sizing: border-box; }
         body {
@@ -124,23 +126,13 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="password">Password</label>
-                <div class="position-relative">
-                    <input type="password"
-                        class="form-control"
-                        id="password"
-                        name="password"
-                        placeholder="Enter password"
-                        required
-                        autocomplete="current-password"
-                        style="padding-right: 42px;">
-                    <button type="button"
-                            id="togglePassword"
-                            class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3"
-                            style="text-decoration:none;color:#666;border:none;background:transparent;z-index:2;"
-                            aria-label="Afficher le mot de passe">
-                        <span id="eyeIcon">(O)</span>
-                    </button>
-                </div>
+                <input type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    required
+                    autocomplete="current-password">
             </div>
             <button type="submit" class="btn btn-login">Login</button>
         </form>
@@ -149,20 +141,7 @@
             <a href="{{ route('password.request') }}">Forgot Password?</a>
         </div>
     </div>
-    <script>
-    document.getElementById('togglePassword').addEventListener('click', function () {
-        const input = document.getElementById('password');
-        const icon = document.getElementById('eyeIcon');
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.textContent = 'XX';
-            this.setAttribute('aria-label', 'Masquer le mot de passe');
-        } else {
-            input.type = 'password';
-            icon.textContent = '(o)';
-            this.setAttribute('aria-label', 'Afficher le mot de passe');
-        }
-    });
-    </script>
+
+    <script src="{{ asset('js/ux-enhancements.js') }}"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'MarketSmart Manager')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ux-enhancements.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
@@ -48,17 +49,17 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{{ route('manager.dashboard') }}" class="nav-link {{ request()->routeIs('manager.dashboard') ? 'active' : '' }}">▤ Dashboard</a>
-            <a href="{{ route('manager.products.index') }}" class="nav-link {{ request()->routeIs('manager.products*') ? 'active' : '' }}">🛒 Products</a>
-            <a href="{{ route('manager.stock-inflow.index') }}" class="nav-link {{ request()->routeIs('manager.stock-inflow.*')?'active':'' }}">□ Stock Inflow</a>
-            <a href="{{ route('manager.stock-outflow.index') }}" class="nav-link {{ request()->routeIs('manager.stock-outflow.*')?'active':'' }}"><> Stock Outflow</a>
-            <a href="{{ route('manager.stock-adjustment.index') }}" class="nav-link {{ request()->routeIs('manager.stock-adjustment.*')?'active':'' }}"> <..>Stock Adjustment</a>
-            <a href="{{ route('manager.expired.index') }}" class="nav-link {{ request()->routeIs('manager.expired.*') || request()->routeIs('manager.expired.*') ?'active':'' }}">!! Expired & Damage Goods</a>
-            <a href="{{ route('manager.reports.inventory') }}" class="nav-link {{ request()->routeIs('manager.reports.inventory')?'active':'' }}">◇ Inventory Report</a>
-            <a href="{{ route('manager.suppliers.index') }}" class="nav-link {{ request()->routeIs('manager.suppliers.*')?'active':'' }}">o Suppliers</a>
-            <a href="{{ route('manager.reports.low-stock') }}" class="nav-link {{ request()->routeIs('manager.reports.low-stock')?'active':'' }}">▤ Low Stock Report</a>
-            <a href="{{ route('manager.categories.index') }}" class="nav-link {{ request()->routeIs('manager.categories*') ? 'active' : '' }}"> ⊞Categories</a>
-            <a href="{{ route('manager.units.index') }}" class="nav-link {{ request()->routeIs('manager.units.*')?'active':'' }}">☰ Unit</a>
+            <a href="{{ route('manager.dashboard') }}" class="nav-link {{ request()->routeIs('manager.dashboard') ? 'active' : '' }}"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
+            <a href="{{ route('manager.products.index') }}" class="nav-link {{ request()->routeIs('manager.products*') ? 'active' : '' }}"><i class="bi bi-box-seam me-2"></i> Products</a>
+            <a href="{{ route('manager.stock-inflow.index') }}" class="nav-link {{ request()->routeIs('manager.stock-inflow.*')?'active':'' }}"><i class="bi bi-box-arrow-in-down me-2"></i> Stock Inflow</a>
+            <a href="{{ route('manager.stock-outflow.index') }}" class="nav-link {{ request()->routeIs('manager.stock-outflow.*')?'active':'' }}"><i class="bi bi-box-arrow-up me-2"></i> Stock Outflow</a>
+            <a href="{{ route('manager.stock-adjustment.index') }}" class="nav-link {{ request()->routeIs('manager.stock-adjustment.*')?'active':'' }}"><i class="bi bi-sliders me-2"></i> Stock Adjustment</a>
+            <a href="{{ route('manager.expired.index') }}" class="nav-link {{ request()->routeIs('manager.expired.*') || request()->routeIs('manager.expired.*') ?'active':'' }}"><i class="bi bi-exclamation-triangle me-2"></i> Expired & Damage Goods</a>
+            <a href="{{ route('manager.reports.inventory') }}" class="nav-link {{ request()->routeIs('manager.reports.inventory')?'active':'' }}"><i class="bi bi-clipboard-data me-2"></i> Inventory Report</a>
+            <a href="{{ route('manager.suppliers.index') }}" class="nav-link {{ request()->routeIs('manager.suppliers.*')?'active':'' }}"><i class="bi bi-truck me-2"></i> Suppliers</a>
+            <a href="{{ route('manager.reports.low-stock') }}" class="nav-link {{ request()->routeIs('manager.reports.low-stock')?'active':'' }}"><i class="bi bi-graph-down me-2"></i> Low Stock Report</a>
+            <a href="{{ route('manager.categories.index') }}" class="nav-link {{ request()->routeIs('manager.categories*') ? 'active' : '' }}"><i class="bi bi-tags me-2"></i> Categories</a>
+            <a href="{{ route('manager.units.index') }}" class="nav-link {{ request()->routeIs('manager.units.*')?'active':'' }}"><i class="bi bi-rulers me-2"></i> Unit</a>
         </nav>
     </aside>
 
@@ -77,23 +78,25 @@
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                         style="border-radius:999px;padding:6px 14px;border:1px solid #e9ecef;">
-                    <span style="width:32px;height:32px;border-radius:50%;background:#fff3cd;display:inline-flex;align-items:center;justify-content:center;">👤</span>
+                    <span style="width:32px;height:32px;border-radius:50%;background:#fff3cd;display:inline-flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-person-fill"></i>
+                    </span>
                     <span class="text-start">
                         <strong style="font-size:13px;display:block;line-height:1.2;">Inventory Manager</strong>
                         <small class="text-muted" style="font-size:11px;">Account</small>
                     </span>
-                    <span style="font-size:10px;color:#6c757d;">▼</span>
+                    <span style="font-size:10px;color:#6c757d;"><i class="bi bi-chevron-down"></i></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="managerUserMenu">
                     <li>
-                        <a class="dropdown-item" href="{{ route('manager.profile') }}">👤 Mon profil</a>
+                        <a class="dropdown-item" href="{{ route('manager.profile') }}"><i class="bi bi-person me-2"></i> Mon profil</a>
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-item text-danger">
-                                🚪 Déconnexion
+                                <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
                             </button>
                         </form>
                     </li>

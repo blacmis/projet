@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 
 class ExpiredDamagedGood extends Model
 {
+    use BelongsToTenant;
+
     protected $fillable = [
         'product_id', 'batch_no', 'type', 'quantity',
         'expiry_date', 'estimated_loss', 'status',

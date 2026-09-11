@@ -31,6 +31,8 @@ use App\Http\Controllers\Cashier\ProfileController as CashierProfileController;
 use App\Http\Controllers\Cashier\NotificationController as CashierNotificationController;
 use App\Http\Controllers\Cashier\QuickShopController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdmin\TenantController as SuperAdminTenantController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\InventoryActionController;
 use App\Http\Controllers\Admin\SaleActionController;
@@ -45,8 +47,14 @@ use App\Http\Controllers\Cashier\CashRegisterController;
 
 // ROUTES PUBLIQUES
 // =========================================
-Route::redirect('/','/login' );
-
+Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing');
+Route::get('/fonctionnalites', [\App\Http\Controllers\LandingController::class, 'features'])->name('landing.features');
+Route::get('/avantages', [\App\Http\Controllers\LandingController::class, 'advantages'])->name('landing.advantages');
+Route::get('/contact', [\App\Http\Controllers\LandingController::class, 'contactPage'])->name('landing.contact.show');
+Route::post('/contact', [\App\Http\Controllers\LandingController::class, 'contact'])->name('landing.contact');
+Route::get('/tarifs', [\App\Http\Controllers\LandingController::class, 'pricing'])->name('landing.pricing');
+Route::get('/inscription', [\App\Http\Controllers\RegistrationController::class, 'show'])->name('landing.register.show');
+Route::post('/inscription', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('landing.register');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
@@ -118,6 +126,8 @@ Route::prefix('manager')
     Route::delete('/units/{id}', [UnitController::class, 'destroy'])->name('units.destroy');
     // Reports
     Route::get('/reports/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
+        Route::get('/reports/inventory/export', [ReportController::class, 'inventoryExport'])->name('reports.inventory.export');
+    Route::get('/reports/low-stock/export', [ReportController::class, 'lowStockExport'])->name('reports.low-stock.export');
     Route::get('/reports/low-stock', [ReportController::class, 'lowStock'])->name('reports.low-stock');
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -198,6 +208,8 @@ Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::post('/settings/reset', [SettingsController::class, 'reset'])->name('settings.reset');
+        Route::get('/feedback', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::post('/feedback', [\App\Http\Controllers\Admin\FeedbackController::class, 'store'])->name('feedback.store');
     Route::post('/users/{id}/unlock', [UserController::class, 'unlock'])->name('users.unlock');
     });
 //acceptation des route par le midleware
@@ -207,8 +219,18 @@ Route::post('/logout', [AuthController::class, 'logout'])
     Route::get('/login/otp', [AuthController::class, 'showLoginOtp'])->name('login.otp');
     Route::post('/login/otp', [AuthController::class, 'verifyLoginOtp'])->name('login.otp.verify');
     Route::post('/login/otp/resend', [AuthController::class, 'resendLoginOtp'])->name('login.otp.resend');
+    Route::get('/login/choose-tenant', [AuthController::class, 'showTenantChoice'])->name('login.choose-tenant');
+    Route::post('/login/choose-tenant', [AuthController::class, 'chooseTenant'])->name('login.choose-tenant.submit');
 
-
-
-// dans Route::prefix('admin')->middleware('role:admin')->group(...)
-
+Route::prefix('super-admin')->name('super-admin.')->middleware('role:super_admin')->group(function () {
+    Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/tenants/create', [SuperAdminTenantController::class, 'create'])->name('tenants.create');
+    Route::post('/tenants', [SuperAdminTenantController::class, 'store'])->name('tenants.store');
+    Route::get('/tenants/{tenant}', [SuperAdminTenantController::class, 'show'])->name('tenants.show');
+    Route::post('/tenants/{tenant}/activate', [SuperAdminTenantController::class, 'activate'])->name('tenants.activate');
+    Route::post('/tenants/{tenant}/suspend', [SuperAdminTenantController::class, 'suspend'])->name('tenants.suspend');
+    Route::get('/leads', [\App\Http\Controllers\SuperAdmin\LeadController::class, 'index'])->name('leads.index');
+        Route::get('/feedback', [\App\Http\Controllers\SuperAdmin\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::post('/feedback/{feedback}/read', [\App\Http\Controllers\SuperAdmin\FeedbackController::class, 'markRead'])->name('feedback.read');
+    });    
+    

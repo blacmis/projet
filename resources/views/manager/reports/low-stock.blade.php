@@ -3,9 +3,9 @@
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Low Stock Report</h4>
-        <button class="btn btn-orange">
+        <a href="{{ route('manager.reports.low-stock.export', ['search' => $search]) }}" class="btn btn-orange">
             <i class="bi bi-download"></i> Export Report
-        </button>
+        </a>
     </div>
     <div class="card">
         <div class="card-body">

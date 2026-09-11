@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 
 class StockOutflow extends Model
 {
+    use BelongsToTenant;
+
     protected $fillable = [
         'product_id', 'type', 'quantity', 'unit_cost', 'total_value', 'date', 'reason',
     ];

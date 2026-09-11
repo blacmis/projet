@@ -3,49 +3,101 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
 class CashierOverviewController extends Controller
 {
     public function index(Request $request)
     {
-        $stats = (object) [
-            'today_sales' => 96,
-            'today_sales_change' => '+22% vs Yesterday',
-            'today_revenue' => 4769000,
-            'today_revenue_change' => '+20.6% vs Yesterday',
-            'transactions' => 34,
-        ];
+        $stats = $this->buildStats();
 
-        $products = collect([
-            (object) ['product_code' => '001', 'product_name' => 'coca cola 1L', 'category' => 'beverages', 'available_stock' => 53, 'sold_stock' => 65, 'min_stock' => 20, 'expiry_date' => '12/11/2027', 'unit_price' => 500],
-            (object) ['product_code' => '002', 'product_name' => 'Rice 50kg', 'category' => 'grains', 'available_stock' => 150, 'sold_stock' => 120, 'min_stock' => 30, 'expiry_date' => '22/07/2027', 'unit_price' => 13500],
-            (object) ['product_code' => '003', 'product_name' => 'Bread Loaf', 'category' => 'bakery', 'available_stock' => 180, 'sold_stock' => 176, 'min_stock' => 4, 'expiry_date' => '29/07/2026', 'unit_price' => 150],
-            (object) ['product_code' => '004', 'product_name' => 'Pick Milk', 'category' => 'beverages', 'available_stock' => 125, 'sold_stock' => 110, 'min_stock' => 15, 'expiry_date' => '12/11/2027', 'unit_price' => 400],
-        ]);
+        $products = $this->buildProducts($request->input('q'));
 
-        if ($request->filled('q')) {
-            $q = strtolower($request->q);
-            $products = $products->filter(function ($p) use ($q) {
-                return str_contains(strtolower($p->product_name), $q)
-                    || str_contains(strtolower($p->product_code), $q);
-            })->values();
-        }
+        $recentSales = $this->buildRecentSales($request->input('payment_method'));
 
-        $recentSales = collect([
-            (object) ['receipt_no' => '000136', 'time' => '04:08pm', 'items' => 3, 'amount' => 8350, 'payment_method' => 'cash'],
-            (object) ['receipt_no' => '000135', 'time' => '03:52pm', 'items' => 6, 'amount' => 19725, 'payment_method' => 'card'],
-            (object) ['receipt_no' => '000134', 'time' => '03:47pm', 'items' => 1, 'amount' => 200, 'payment_method' => 'cash'],
-            (object) ['receipt_no' => '000133', 'time' => '03:41pm', 'items' => 5, 'amount' => 3600, 'payment_method' => 'mobile money'],
-            (object) ['receipt_no' => '000132', 'time' => '03:36pm', 'items' => 2, 'amount' => 11000, 'payment_method' => 'card'],
-            (object) ['receipt_no' => '000130', 'time' => '03:31pm', 'items' => 1, 'amount' => 1500, 'payment_method' => 'cash'],
-        ]);
-
-        if ($request->filled('payment_method') && $request->payment_method !== 'all') {
-            $method = strtolower($request->payment_method);
-            $recentSales = $recentSales->filter(fn ($s) => strtolower($s->payment_method) === $method)->values();
-        }
-        
         return view('admin.cashier', compact('stats', 'products', 'recentSales'));
+    }
+
+    private function buildStats(): object
+    {
+        $todayItemsSold = \App\Models\SaleItem::whereHas('sale', function ($q) {
+            $q->where('status', 'completed')->whereDate('created_at', today());
+        })->sum('quantity');
+
+        $yesterdayItemsSold = \App\Models\SaleItem::whereHas('sale', function ($q) {
+            $q->where('status', 'completed')->whereDate('created_at', today()->subDay());
+        })->sum('quantity');
+
+        $todayRevenue = Sale::where('status', 'completed')->whereDate('created_at', today())->sum('total');
+        $yesterdayRevenue = Sale::where('status', 'completed')->whereDate('created_at', today()->subDay())->sum('total');
+
+        $todayTransactions = Sale::where('status', 'completed')->whereDate('created_at', today())->count();
+
+        return (object) [
+            'today_sales' => $todayItemsSold,
+            'today_sales_change' => $this->percentChange($todayItemsSold, $yesterdayItemsSold) . ' vs Yesterday',
+            'today_revenue' => $todayRevenue,
+            'today_revenue_change' => $this->percentChange($todayRevenue, $yesterdayRevenue) . ' vs Yesterday',
+            'transactions' => $todayTransactions,
+        ];
+    }
+
+    private function buildProducts(?string $q)
+    {
+        $query = Product::query()->orderBy('id');
+
+        if ($q) {
+            $q = strtolower($q);
+            $query->where(function ($query) use ($q) {
+                $query->whereRaw('LOWER(name) LIKE ?', ["%{$q}%"])
+                    ->orWhereRaw('LOWER(barcode) LIKE ?', ["%{$q}%"]);
+            });
+        }
+
+        return $query->get()->map(function (Product $p) {
+            $latestInflow = $p->stockInflows()->whereNotNull('expiry_date')->latest('expiry_date')->first();
+            $soldStock = $p->saleItems()->sum('quantity');
+
+            return (object) [
+                'product_code' => $p->barcode ?: str_pad((string) $p->id, 3, '0', STR_PAD_LEFT),
+                'product_name' => $p->name,
+                'category' => $p->category ?? '—',
+                'available_stock' => $p->stock_quantity,
+                'sold_stock' => $soldStock,
+                'min_stock' => $p->low_stock_threshold,
+                'expiry_date' => $latestInflow?->expiry_date?->format('d/m/Y') ?? '—',
+                'unit_price' => $p->price,
+            ];
+        });
+    }
+
+    private function buildRecentSales(?string $paymentMethod)
+    {
+        $query = Sale::where('status', 'completed')->with('items')->latest();
+
+        if ($paymentMethod && $paymentMethod !== 'all') {
+            $query->where('payment_method', $paymentMethod);
+        }
+
+        return $query->take(6)->get()->map(function (Sale $sale) {
+            return (object) [
+                'receipt_no' => $sale->transaction_number,
+                'time' => $sale->created_at->format('h:ia'),
+                'items' => $sale->items->sum('quantity'),
+                'amount' => $sale->total,
+                'payment_method' => $sale->payment_method,
+            ];
+        });
+    }
+
+    private function percentChange($today, $yesterday): string
+    {
+        if ($yesterday <= 0) {
+            return $today > 0 ? '+100%' : '0%';
+        }
+        $change = round((($today - $yesterday) / $yesterday) * 100);
+        return ($change >= 0 ? '+' : '') . $change . '%';
     }
 }

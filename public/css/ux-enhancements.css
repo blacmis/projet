@@ -27,3 +27,37 @@ button.is-loading {
     cursor: not-allowed;
     opacity: 0.85;
 }
+.ux-network-warning {
+    background: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffe69c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+}
+.ux-password-wrap {
+    position: relative;
+}
+
+.ux-password-wrap input {
+    padding-right: 42px !important;
+}
+
+.ux-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-size: 1.05rem;
+    padding: 4px 8px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ux-password-toggle:hover {
+    color: #333;
+}

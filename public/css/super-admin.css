@@ -1,0 +1,214 @@
+:root {
+    --sa-dark: #1f2937;
+    --sidebar-width: 240px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f5f6f8;
+    color: #212529;
+}
+
+/* SIDEBAR */
+.sidebar.super-admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--sa-dark);
+    color: #fff;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+    padding: 16px 0;
+}
+
+.super-admin-sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 20px;
+    color: #fff;
+}
+
+.super-admin-sidebar .logo-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+.super-admin-sidebar .logo-circle svg { width: 24px; height: 24px; }
+
+.super-admin-sidebar .brand-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #fff;
+}
+
+.super-admin-sidebar .brand-name span { color: #9ca3af; }
+
+.super-admin-sidebar .brand-sub {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,.65);
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.super-admin-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: calc(100% - 20px);
+    min-height: 56px;
+    padding: 0 16px;
+    margin: 8px 10px;
+    background-color: transparent;
+    color: rgba(255,255,255,.85);
+    text-decoration: none;
+    font-size: .95rem;
+    border-left: 4px solid transparent;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: background-color .2s ease, color .2s ease, border-left-color .2s ease;
+}
+
+.super-admin-sidebar .nav-link:hover,
+.super-admin-sidebar .nav-link.active {
+    background-color: #fff;
+    color: var(--sa-dark);
+    font-weight: 600;
+    border-left-color: var(--sa-dark);
+}
+
+/* MAIN */
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    min-width: 0;
+}
+
+/* HEADER */
+.super-admin-header {
+    background: #fff;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #e9ecef;
+    min-width: 0;
+}
+
+.super-admin-header .welcome {
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+/* CONTENT */
+.content {
+    padding: 24px 28px;
+    min-width: 0;
+}
+
+/* CARDS */
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    height: 100%;
+    min-width: 0;
+}
+
+.stat-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-card .stat-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 4px 0 0;
+}
+
+/* TABLE */
+.table-wrap {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-wrap table { width: 100%; min-width: 640px; border-collapse: collapse; }
+
+.table-wrap th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.table-wrap td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: 0.9rem;
+}
+
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-good { background: #d1e7dd; color: #0f5132; }
+.badge-low { background: #fff3cd; color: #664d03; }
+.badge-out { background: #f8d7da; color: #842029; }
+
+/* FORMULAIRE (création de supermarché) */
+.form-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    max-width: 640px;
+}
+
+/* SÉCURITÉ */
+.main-content, .content, .super-admin-header, .sidebar, .table-wrap {
+    min-width: 0;
+}
+
+img, svg, video, canvas { max-width: 100%; }
+
+/* Tout le responsive (tablette / mobile) est géré exclusivement
+   dans public/css/responsive.css, chargé après ce fichier. */
