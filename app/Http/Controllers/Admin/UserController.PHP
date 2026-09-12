@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -75,7 +76,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email|max:150|unique:users,email',
+            'email' => [
+                'required',
+                'email',
+                'max:150',
+                Rule::unique('users', 'email')->where(
+                    fn ($query) => $query->where('tenant_id', session('auth_tenant_id'))
+                ),
+            ],
             'role' => 'required|in:manager,cashier,admin',
             'password' => 'required|string|min:6',
         ]);

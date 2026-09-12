@@ -29,19 +29,7 @@
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">
-            <button class="btn btn-primary" onclick="showcartpopup()" id="add-to-cart" style="width:100%;margin-top:10px" {{ $product->stock_quantity < 1 ? 'disabled' : '' }}>Add to Sale<a href="resources/views/cashier/payment.blade.php">
-            <script>
-                function showcartpopup() {
-                    swal.fire({
-                        title: 'succes',
-                        Text: 'item added',
-                        icon: 'success',
-                        confirmButtonText: 'continue shopping',
-                        timer: 2500 // automatic closs after 2.5seconds
-                    });
-                }
-                
-                </script></a></button>
+            <button class="btn btn-primary" style="width:100%;margin-top:10px" {{ $product->stock_quantity < 1 ? 'disabled' : '' }}>Add to Sale</button>
         </form>
     </div>
 @empty

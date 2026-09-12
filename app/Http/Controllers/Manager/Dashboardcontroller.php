@@ -8,6 +8,7 @@ use App\Models\StockInflow;
 use App\Models\StockOutflow;
 use App\Models\ExpiredDamagedGood;
 use App\Models\Sale;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -44,9 +45,11 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
+        $managerName = User::where('email', session('auth_user'))->value('name') ?? 'Manager';
+
         return view('manager.dashboard', compact(
             'lowStockCount', 'expiringSoonCount', 'expiredCount', 'todaysSales',
-            'recentInflows', 'recentOutflows'
+            'recentInflows', 'recentOutflows', 'managerName'
         ));
     }
 }

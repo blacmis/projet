@@ -1,7 +1,7 @@
 <header class="topbar">
     <div class="page-title">
-        <h1>@yield('page-title', 'Paiement')</h1>
-        <p>@yield('page-subtitle', 'Portail de caisse MarketSmart')</p>
+        <h1>@yield('page_title', 'Paiement')</h1>
+        <p>@yield('page_subtitle', 'Portail de caisse MarketSmart')</p>
     </div>
     <div class="top-actions">
         <a href="{{ route('cashier.notifications') }}" class="icon-btn notification-dot" title="Notifications">🔔</a>

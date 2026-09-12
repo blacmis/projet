@@ -3,9 +3,9 @@
 @section('content')
     <div class="page-header">
         <h4 class="page-title">Inventory Report</h4>
-        <button class="btn btn-orange">
+        <a href="{{ route('manager.reports.inventory.export', ['search' => $search]) }}" class="btn btn-orange">
             <i class="bi bi-download"></i> Export Report
-        </button>
+        </a>
     </div>
     {{-- Stats --}}
     <div class="row g-3 mb-4">
@@ -18,7 +18,7 @@
         <div class="col-md-4">
             <div class="stat-card">
                 <h5 class="mb-1">XAF {{ number_format($totalValue, 0, ',', ' ') }}</h5>
-                <small class="text-muted">Total Inventory Value</small>
+                <small class="text-muted"></i>Total Inventory Value</small>
             </div>
         </div>
         <div class="col-md-4">

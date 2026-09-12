@@ -19,30 +19,30 @@
     <nav class="nav">
         <a href="{{ route('cashier.quick-shop') }}"
            class="nav-link {{ request()->routeIs('cashier.quick-shop') ? 'active' : '' }}">
-            <span>⊞</span> Boutique rapide
+            <span><i class="bi bi-shop"></i></span> Boutique rapide
         </a>
         <a href="{{ route('cashier.payment') }}"
            class="nav-link {{ request()->routeIs('cashier.payment') ? 'active' : '' }}">
-            <span>$</span> Paiement
+            <span><i class="bi bi-credit-card"></i></span> Paiement
         </a>
         <a href="{{ route('cashier.register.open') }}"class="nav-link {{ request()->routeIs('cashier.register.open') ? 'active' : '' }}">
-            <span>🛒</span> Ouverture de Caisse</a>
-        <a href="{{ route('cashier.register.close') }}"class="nav-link {{ request()->routeIs('cashier.register.close') ? 'active' : '' }}"><span>↩</span> Fermeture de Caisse</a>
+            <span><i class="bi bi-box-arrow-in-right"></i></span> Ouverture de Caisse</a>
+        <a href="{{ route('cashier.register.close') }}"class="nav-link {{ request()->routeIs('cashier.register.close') ? 'active' : '' }}"><span><i class="bi bi-box-arrow-right"></i></span> Fermeture de Caisse</a>
         <a href="{{ route('cashier.receipt') }}"
            class="nav-link {{ request()->routeIs('cashier.receipt') ? 'active' : '' }}">
-            <span>▤</span> Reçu
+            <span><i class="bi bi-receipt"></i></span> Reçu
         </a>
         <a href="{{ route('cashier.sales') }}"
            class="nav-link {{ request()->routeIs('cashier.sales*') || request()->routeIs('cashier.sale.*') ? 'active' : '' }}">
-            <span>☰</span> Historique des ventes
+            <span><i class="bi bi-clock-history"></i></span> Historique des ventes
         </a>
         <a href="{{ route('cashier.summary') }}"
            class="nav-link {{ request()->routeIs('cashier.summary') ? 'active' : '' }}">
-            <span>▤</span> Résumé quotidien
+            <span><i class="bi bi-calendar-check"></i></span> Résumé quotidien
         </a>
         <a href="{{ route('cashier.notifications') }}"
            class="nav-link {{ request()->routeIs('cashier.notifications') ? 'active' : '' }}">
-            <span>◇</span> Notifications
+            <span><i class="bi bi-bell"></i></span> Notifications
         </a>
     </nav>
 </aside>
