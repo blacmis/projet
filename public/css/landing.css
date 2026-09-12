@@ -322,7 +322,7 @@ footer { background: var(--ink); color: #cdd3da; padding: 54px 0 26px; }
     .nav-links.open { display: flex; }
     .nav-links a { width: 100%; padding: 12px 12px; }
 
-    .nav-login-mobile {
+        .nav-links .nav-login-mobile {
         display: flex; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--line);
         justify-content: center;
     }

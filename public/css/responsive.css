@@ -775,7 +775,7 @@ button,
 
         width: 100% !important;
 
-        height: 64px !important;
+        
         min-height: 64px !important;
 
         margin: 0 !important;
@@ -1031,6 +1031,13 @@ button,
 
         padding-top: 7px !important;
         padding-bottom: 7px !important;
+    }
+        /* Le topbar Cashier affiche toujours un titre + un sous-titre,
+       il a besoin d'un peu plus de hauteur que les autres headers
+       pour ne pas voir son texte coupé en haut de l'écran. */
+    .topbar {
+        height: auto !important;
+        min-height: 60px !important;
     }
 
 
